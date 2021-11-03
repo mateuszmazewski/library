@@ -56,6 +56,22 @@ public class AuthorsView extends VerticalLayout {
     private void configureForm() {
         form = new AuthorForm();
         form.setWidth("25em");
+
+        form.addListener(AuthorForm.SaveEvent.class, this::saveAuthor);
+        form.addListener(AuthorForm.DeleteEvent.class, this::deleteAuthor);
+        form.addListener(AuthorForm.CloseEvent.class, e -> closeEditor());
+    }
+
+    private void saveAuthor(AuthorForm.SaveEvent event) {
+        service.saveAuthor(event.getAuthor());
+        updateList();
+        closeEditor();
+    }
+
+    private void deleteAuthor(AuthorForm.DeleteEvent event) {
+        service.deleteAuthor(event.getAuthor());
+        updateList();
+        closeEditor();
     }
 
     private Component getToolbar() {
@@ -90,7 +106,7 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void editAuthor(Author author) {
-        if(author == null) {
+        if (author == null) {
             closeEditor();
         } else {
             form.setAuthor(author);

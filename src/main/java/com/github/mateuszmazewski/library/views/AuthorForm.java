@@ -44,8 +44,8 @@ public class AuthorForm extends FormLayout {
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         saveButton.addClickListener(e -> validateAndSave());
-        deleteButton.addClickListener(e -> new DeleteEvent(this, author));
-        cancelButton.addClickListener(e -> new CloseEvent(this));
+        deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, author)));
+        cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
 
         saveButton.addClickShortcut(Key.ENTER);
         cancelButton.addClickShortcut(Key.ESCAPE);
