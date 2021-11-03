@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.library.views;
 
 import com.github.mateuszmazewski.library.data.entity.Author;
+import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -17,8 +18,10 @@ public class AuthorsView extends VerticalLayout {
     Grid<Author> grid = new Grid<>(Author.class);
     TextField filterText = new TextField();
     AuthorForm form;
+    private DataService service;
 
-    public AuthorsView() {
+    public AuthorsView(DataService service) {
+        this.service = service;
         addClassName("list-view");
         setSizeFull(); // this view size == browser window size
 
@@ -26,6 +29,11 @@ public class AuthorsView extends VerticalLayout {
         configureForm();
 
         add(getToolbar(), getContent());
+        updateList();
+    }
+
+    private void updateList() {
+        grid.setItems(service.findAuthors(filterText.getValue()));
     }
 
     private Component getContent() {
@@ -47,6 +55,7 @@ public class AuthorsView extends VerticalLayout {
         filterText.setPlaceholder("Imię lub nazwisko...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY); // wait a while before querying database
+        filterText.addValueChangeListener(e -> updateList());
 
         Button addAuthorButton = new Button("Dodaj autora");
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addAuthorButton);
