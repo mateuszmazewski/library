@@ -30,6 +30,13 @@ public class AuthorsView extends VerticalLayout {
 
         add(getToolbar(), getContent());
         updateList();
+        closeEditor();
+    }
+
+    private void closeEditor() {
+        form.setAuthor(null);
+        form.setVisible(false);
+        removeClassName("editing");
     }
 
     private void updateList() {
@@ -58,10 +65,17 @@ public class AuthorsView extends VerticalLayout {
         filterText.addValueChangeListener(e -> updateList());
 
         Button addAuthorButton = new Button("Dodaj autora");
+        addAuthorButton.addClickListener(e -> addAuthor());
+
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addAuthorButton);
         toolbar.addClassName("toolbar");
 
         return toolbar;
+    }
+
+    private void addAuthor() {
+        grid.asSingleSelect().clear();
+        editAuthor(new Author());
     }
 
     private void configureGrid() {
@@ -71,6 +85,18 @@ public class AuthorsView extends VerticalLayout {
         grid.addColumn(Author::getName).setHeader("Imię").setSortable(true);
         grid.addColumn(Author::getSurname).setHeader("Nazwisko").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        grid.asSingleSelect().addValueChangeListener(e -> editAuthor(e.getValue()));
+    }
+
+    private void editAuthor(Author author) {
+        if(author == null) {
+            closeEditor();
+        } else {
+            form.setAuthor(author);
+            form.setVisible(true);
+            addClassName("editing");
+        }
     }
 
 }
