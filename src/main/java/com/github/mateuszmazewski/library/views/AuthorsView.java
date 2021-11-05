@@ -18,12 +18,11 @@ public class AuthorsView extends VerticalLayout {
     Grid<Author> grid = new Grid<>(Author.class);
     TextField filterText = new TextField();
     AuthorForm form;
-    private DataService service;
+    private final DataService service;
 
     public AuthorsView(DataService service) {
         this.service = service;
-        addClassName("list-view");
-        setSizeFull(); // this view size == browser window size
+        setSizeFull();
 
         configureGrid();
         configureForm();
@@ -63,13 +62,13 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void saveAuthor(AuthorForm.SaveEvent event) {
-        service.saveAuthor(event.getAuthor());
+        service.saveAuthor((Author) event.getEntity());
         updateList();
         closeEditor();
     }
 
     private void deleteAuthor(AuthorForm.DeleteEvent event) {
-        service.deleteAuthor(event.getAuthor());
+        service.deleteAuthor((Author) event.getEntity());
         updateList();
         closeEditor();
     }
@@ -77,16 +76,13 @@ public class AuthorsView extends VerticalLayout {
     private Component getToolbar() {
         filterText.setPlaceholder("Imię lub nazwisko...");
         filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY); // wait a while before querying database
+        filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
         Button addAuthorButton = new Button("Dodaj autora");
         addAuthorButton.addClickListener(e -> addAuthor());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addAuthorButton);
-        toolbar.addClassName("toolbar");
-
-        return toolbar;
+        return new HorizontalLayout(filterText, addAuthorButton);
     }
 
     private void addAuthor() {
@@ -95,7 +91,6 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void configureGrid() {
-        grid.addClassName("authors-grid");
         grid.setSizeFull();
         grid.removeAllColumns();
         grid.addColumn(Author::getName).setHeader("Imię").setSortable(true);
@@ -114,5 +109,4 @@ public class AuthorsView extends VerticalLayout {
             addClassName("editing");
         }
     }
-
 }
