@@ -1,7 +1,9 @@
 package com.github.mateuszmazewski.library.data.generator;
 
 import com.github.mateuszmazewski.library.data.entity.Author;
+import com.github.mateuszmazewski.library.data.entity.Category;
 import com.github.mateuszmazewski.library.data.repository.AuthorRepository;
+import com.github.mateuszmazewski.library.data.repository.CategoryRepository;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,12 @@ import org.springframework.context.annotation.Bean;
 public class DataGenerator {
 
     @Bean
-    public CommandLineRunner loadData(AuthorRepository authorRepository) {
+    public CommandLineRunner loadData(AuthorRepository authorRepository,
+                                      CategoryRepository categoryRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
-            if (authorRepository.count() != 0L) {
+            if (authorRepository.count() != 0L || categoryRepository.count() != 0L) {
                 logger.info("Using existing database");
                 return;
             }
@@ -38,6 +41,19 @@ public class DataGenerator {
             authorRepository.save(a1);
             authorRepository.save(a2);
             authorRepository.save(a3);
+
+            Category c1 = new Category();
+            c1.setName("Powieść");
+
+            Category c2 = new Category();
+            c2.setName("Opowiadanie");
+
+            Category c3 = new Category();
+            c3.setName("Fraszka");
+
+            categoryRepository.save(c1);
+            categoryRepository.save(c2);
+            categoryRepository.save(c3);
         };
     }
 
