@@ -32,11 +32,13 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         RouterLink authorsView = new RouterLink("Autorzy", AuthorsView.class);
         RouterLink categoriesView = new RouterLink("Kategorie", CategoriesView.class);
+        RouterLink publishersView = new RouterLink("Wydawnictwa", PublishersView.class);
 
         authorsView.setHighlightCondition(HighlightConditions.sameLocation());
         categoriesView.setHighlightCondition(HighlightConditions.sameLocation());
+        publishersView.setHighlightCondition(HighlightConditions.sameLocation());
 
-        VerticalLayout viewsList = new VerticalLayout(authorsView, categoriesView);
+        VerticalLayout viewsList = new VerticalLayout(authorsView, categoriesView, publishersView);
         addToDrawer(viewsList);
     }
 }

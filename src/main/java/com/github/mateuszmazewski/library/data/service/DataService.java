@@ -3,9 +3,11 @@ package com.github.mateuszmazewski.library.data.service;
 import com.github.mateuszmazewski.library.data.entity.Author;
 import com.github.mateuszmazewski.library.data.entity.Category;
 import com.github.mateuszmazewski.library.data.entity.Genre;
+import com.github.mateuszmazewski.library.data.entity.Publisher;
 import com.github.mateuszmazewski.library.data.repository.AuthorRepository;
 import com.github.mateuszmazewski.library.data.repository.CategoryRepository;
 import com.github.mateuszmazewski.library.data.repository.GenreRepository;
+import com.github.mateuszmazewski.library.data.repository.PublisherRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +18,16 @@ public class DataService {
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
     private final GenreRepository genreRepository;
+    private final PublisherRepository publisherRepository;
 
     public DataService(AuthorRepository authorRepository,
                        CategoryRepository categoryRepository,
-                       GenreRepository genreRepository) {
+                       GenreRepository genreRepository,
+                       PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
         this.genreRepository = genreRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     // ----- Authors -----
@@ -81,11 +86,11 @@ public class DataService {
 
     // ----- Genres -----
 
-    public List<Genre> findGenres(String filterText) {
-        if (filterText == null || filterText.isEmpty()) {
+    public List<Genre> findGenres(String filterName) {
+        if (filterName == null || filterName.isEmpty()) {
             return genreRepository.findAll();
         } else {
-            return genreRepository.search(filterText);
+            return genreRepository.search(filterName);
         }
     }
 
@@ -104,5 +109,32 @@ public class DataService {
         }
 
         genreRepository.save(genre);
+    }
+
+    // ----- Publishers -----
+
+    public List<Publisher> findPublishers(String filterName) {
+        if (filterName == null || filterName.isEmpty()) {
+            return publisherRepository.findAll();
+        } else {
+            return publisherRepository.search(filterName);
+        }
+    }
+
+    public long countPublishers() {
+        return publisherRepository.count();
+    }
+
+    public void deletePublisher(Publisher publisher) {
+        publisherRepository.delete(publisher);
+    }
+
+    public void savePublisher(Publisher publisher) {
+        if (publisher == null) {
+            System.err.println("Publisher is null");
+            return;
+        }
+
+        publisherRepository.save(publisher);
     }
 }

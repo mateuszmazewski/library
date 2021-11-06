@@ -1,6 +1,6 @@
 package com.github.mateuszmazewski.library.views;
 
-import com.github.mateuszmazewski.library.data.entity.Author;
+import com.github.mateuszmazewski.library.data.entity.Publisher;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -13,16 +13,15 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@PageTitle("Autorzy | Biblioteka")
-@Route(value = "", layout = MainLayout.class)
-public class AuthorsView extends VerticalLayout {
-    Grid<Author> grid = new Grid<>(Author.class);
-    TextField filterName = new TextField("Imię");
-    TextField filterSurname = new TextField("Nazwisko");
-    AuthorForm form;
+@PageTitle("Wydawnictwa | Biblioteka")
+@Route(value = "publishers", layout = MainLayout.class)
+public class PublishersView extends VerticalLayout {
+    Grid<Publisher> grid = new Grid<>(Publisher.class);
+    TextField filterName = new TextField("Nazwa");
+    PublisherForm form;
     private final DataService service;
 
-    public AuthorsView(DataService service) {
+    public PublishersView(DataService service) {
         this.service = service;
         setSizeFull();
 
@@ -35,13 +34,13 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void closeEditor() {
-        form.setAuthor(null);
+        form.setPublisher(null);
         form.setVisible(false);
         removeClassName("editing");
     }
 
     private void updateList() {
-        grid.setItems(service.findAuthors(filterName.getValue(), filterSurname.getValue()));
+        grid.setItems(service.findPublishers(filterName.getValue()));
     }
 
     private Component getContent() {
@@ -55,22 +54,22 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new AuthorForm();
+        form = new PublisherForm();
         form.setWidth("25em");
 
-        form.addListener(AuthorForm.SaveEvent.class, this::saveAuthor);
-        form.addListener(AuthorForm.DeleteEvent.class, this::deleteAuthor);
-        form.addListener(AuthorForm.CloseEvent.class, e -> closeEditor());
+        form.addListener(PublisherForm.SaveEvent.class, this::savePublisher);
+        form.addListener(PublisherForm.DeleteEvent.class, this::deletePublisher);
+        form.addListener(PublisherForm.CloseEvent.class, e -> closeEditor());
     }
 
-    private void saveAuthor(AuthorForm.SaveEvent event) {
-        service.saveAuthor((Author) event.getEntity());
+    private void savePublisher(PublisherForm.SaveEvent event) {
+        service.savePublisher((Publisher) event.getEntity());
         updateList();
         closeEditor();
     }
 
-    private void deleteAuthor(AuthorForm.DeleteEvent event) {
-        service.deleteAuthor((Author) event.getEntity());
+    private void deletePublisher(PublisherForm.DeleteEvent event) {
+        service.deletePublisher((Publisher) event.getEntity());
         updateList();
         closeEditor();
     }
@@ -80,18 +79,14 @@ public class AuthorsView extends VerticalLayout {
         filterName.setValueChangeMode(ValueChangeMode.LAZY);
         filterName.addValueChangeListener(e -> updateList());
 
-        filterSurname.setClearButtonVisible(true);
-        filterSurname.setValueChangeMode(ValueChangeMode.LAZY);
-        filterSurname.addValueChangeListener(e -> updateList());
-
         Button clearFiltersButton = new Button("Wyczyść filtry");
         clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         clearFiltersButton.addClickListener(e -> clearFilters());
 
-        Button addAuthorButton = new Button("Dodaj autora");
-        addAuthorButton.addClickListener(e -> addAuthor());
+        Button addPublisherButton = new Button("Dodaj wydawnictwo");
+        addPublisherButton.addClickListener(e -> addPublisher());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterName, filterSurname, clearFiltersButton, addAuthorButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterName, clearFiltersButton, addPublisherButton);
         toolbar.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
         return toolbar;
@@ -99,29 +94,29 @@ public class AuthorsView extends VerticalLayout {
 
     private void clearFilters() {
         filterName.setValue("");
-        filterSurname.setValue("");
     }
 
-    private void addAuthor() {
+    private void addPublisher() {
         grid.asSingleSelect().clear();
-        editAuthor(new Author());
+        editPublisher(new Publisher());
     }
 
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(Author::getName).setHeader("Imię").setSortable(true);
-        grid.addColumn(Author::getSurname).setHeader("Nazwisko").setSortable(true);
+        grid.addColumn(Publisher::getName).setHeader("Nazwa").setSortable(true);
+        grid.addColumn(Publisher::getEmail).setHeader("E-mail").setSortable(false);
+        grid.addColumn(Publisher::getPhoneNumber).setHeader("Numer telefonu").setSortable(false);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(e -> editAuthor(e.getValue()));
+        grid.asSingleSelect().addValueChangeListener(e -> editPublisher(e.getValue()));
     }
 
-    private void editAuthor(Author author) {
-        if (author == null) {
+    private void editPublisher(Publisher publisher) {
+        if (publisher == null) {
             closeEditor();
         } else {
-            form.setAuthor(author);
+            form.setPublisher(publisher);
             form.setVisible(true);
             addClassName("editing");
         }
