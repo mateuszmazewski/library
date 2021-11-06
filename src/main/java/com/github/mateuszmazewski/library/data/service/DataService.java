@@ -27,11 +27,11 @@ public class DataService {
 
     // ----- Authors -----
 
-    public List<Author> findAuthors(String filterText) {
-        if (filterText == null || filterText.isEmpty()) {
+    public List<Author> findAuthors(String filterName, String filterSurname) {
+        if ((filterName == null || filterName.isEmpty()) && (filterSurname == null || filterSurname.isEmpty())) {
             return authorRepository.findAll();
         } else {
-            return authorRepository.search(filterText);
+            return authorRepository.search(filterName, filterSurname);
         }
     }
 

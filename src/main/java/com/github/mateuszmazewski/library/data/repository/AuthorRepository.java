@@ -10,7 +10,7 @@ import java.util.List;
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     @Query("select a from Author a " +
-            "where lower(a.name) like lower(concat('%', :searchTerm, '%')) " +
-            "or lower(a.surname) like lower(concat('%', :searchTerm, '%'))")
-    List<Author> search(@Param("searchTerm") String searchTerm);
+            "where lower(a.name) like lower(concat('%', :searchName, '%')) " +
+            "and lower(a.surname) like lower(concat('%', :searchSurname, '%'))")
+    List<Author> search(@Param("searchName") String searchName, @Param("searchSurname") String searchSurname);
 }

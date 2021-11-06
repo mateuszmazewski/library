@@ -4,6 +4,7 @@ import com.github.mateuszmazewski.library.data.entity.Author;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,7 +17,8 @@ import com.vaadin.flow.router.Route;
 @Route(value = "", layout = MainLayout.class)
 public class AuthorsView extends VerticalLayout {
     Grid<Author> grid = new Grid<>(Author.class);
-    TextField filterText = new TextField();
+    TextField filterName = new TextField();
+    TextField filterSurname = new TextField();
     AuthorForm form;
     private final DataService service;
 
@@ -39,7 +41,7 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(service.findAuthors(filterText.getValue()));
+        grid.setItems(service.findAuthors(filterName.getValue(), filterSurname.getValue()));
     }
 
     private Component getContent() {
@@ -74,15 +76,32 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Imię lub nazwisko...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        filterName.setLabel("Imię");
+        filterName.setClearButtonVisible(true);
+        filterName.setValueChangeMode(ValueChangeMode.LAZY);
+        filterName.addValueChangeListener(e -> updateList());
+
+        filterSurname.setLabel("Nazwisko");
+        filterSurname.setClearButtonVisible(true);
+        filterSurname.setValueChangeMode(ValueChangeMode.LAZY);
+        filterSurname.addValueChangeListener(e -> updateList());
+
+        Button clearFiltersButton = new Button("Wyczyść filtry");
+        clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        clearFiltersButton.addClickListener(e -> clearFilters());
 
         Button addAuthorButton = new Button("Dodaj autora");
         addAuthorButton.addClickListener(e -> addAuthor());
 
-        return new HorizontalLayout(filterText, addAuthorButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterName, filterSurname, clearFiltersButton, addAuthorButton);
+        toolbar.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+        return toolbar;
+    }
+
+    private void clearFilters() {
+        filterName.setValue("");
+        filterSurname.setValue("");
     }
 
     private void addAuthor() {
