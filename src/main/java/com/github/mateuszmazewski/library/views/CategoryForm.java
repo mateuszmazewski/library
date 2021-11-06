@@ -2,7 +2,7 @@ package com.github.mateuszmazewski.library.views;
 
 import com.github.mateuszmazewski.library.data.entity.Category;
 import com.github.mateuszmazewski.library.data.entity.Genre;
-import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -13,7 +13,7 @@ import java.util.List;
 public class CategoryForm extends EntityForm {
     Binder<Category> binder = new BeanValidationBinder<>(Category.class);
 
-    Select<Genre> genre = new Select<>();
+    ComboBox<Genre> genre = new ComboBox<>("Rodzaj literacki");
     TextField name = new TextField("Gatunek literacki");
     private Category category;
 
@@ -21,7 +21,6 @@ public class CategoryForm extends EntityForm {
         super();
         binder.bindInstanceFields(this);
 
-        genre.setLabel("Rodzaj literacki");
         genre.setItems(genres);
         genre.setItemLabelGenerator(Genre::getName);
 
