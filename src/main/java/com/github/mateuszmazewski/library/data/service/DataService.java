@@ -54,11 +54,11 @@ public class DataService {
 
     // ----- Categories -----
 
-    public List<Category> findCategories(String filterText) {
-        if (filterText == null || filterText.isEmpty()) {
+    public List<Category> findCategories(String filterName, Integer filterGenreId) {
+        if ((filterName == null || filterName.isEmpty()) && (filterGenreId == null)) {
             return categoryRepository.findAll();
         } else {
-            return categoryRepository.search(filterText);
+            return categoryRepository.search(filterName, filterGenreId);
         }
     }
 

@@ -1,9 +1,12 @@
 package com.github.mateuszmazewski.library.views;
 
 import com.github.mateuszmazewski.library.data.entity.Category;
+import com.github.mateuszmazewski.library.data.entity.Genre;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,7 +19,8 @@ import com.vaadin.flow.router.Route;
 @Route(value = "categories", layout = MainLayout.class)
 public class CategoriesView extends VerticalLayout {
     Grid<Category> grid = new Grid<>(Category.class);
-    TextField filterText = new TextField();
+    TextField filterName = new TextField("Gatunek literacki");
+    ComboBox<Genre> filterGenre = new ComboBox<>("Rodzaj literacki");
     CategoryForm form;
     private final DataService service;
 
@@ -39,7 +43,11 @@ public class CategoriesView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(service.findCategories(filterText.getValue()));
+        if (filterGenre.getValue() != null) {
+            grid.setItems(service.findCategories(filterName.getValue(), filterGenre.getValue().getId()));
+        } else {
+            grid.setItems(service.findCategories(filterName.getValue(), null));
+        }
     }
 
     private Component getContent() {
@@ -74,15 +82,31 @@ public class CategoriesView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Nazwa kategorii ...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        filterName.setClearButtonVisible(true);
+        filterName.setValueChangeMode(ValueChangeMode.LAZY);
+        filterName.addValueChangeListener(e -> updateList());
+
+        filterGenre.setItems(service.findGenres(null));
+        filterGenre.setItemLabelGenerator(Genre::getName);
+        filterGenre.setClearButtonVisible(true);
+        filterGenre.addValueChangeListener(e -> updateList());
+
+        Button clearFiltersButton = new Button("Wyczyść filtry");
+        clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        clearFiltersButton.addClickListener(e -> clearFilters());
 
         Button addCategoryButton = new Button("Dodaj kategorię");
         addCategoryButton.addClickListener(e -> addCategory());
 
-        return new HorizontalLayout(filterText, addCategoryButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterName, filterGenre, clearFiltersButton, addCategoryButton);
+        toolbar.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+        return toolbar;
+    }
+
+    private void clearFilters() {
+        filterName.clear();
+        filterGenre.clear();
     }
 
     private void addCategory() {
