@@ -10,6 +10,6 @@ import java.util.List;
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
 
     @Query("select g from Genre g " +
-            "where lower(g.name) like lower(concat('%', :searchTerm, '%')) ")
-    List<Genre> search(@Param("searchTerm") String searchTerm);
+            "where lower(g.name) like lower(concat('%', :searchName, '%')) ")
+    List<Genre> search(@Param("searchName") String searchName);
 }
