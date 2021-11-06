@@ -1,6 +1,5 @@
 package com.github.mateuszmazewski.library.views;
 
-import com.github.mateuszmazewski.library.data.entity.Author;
 import com.github.mateuszmazewski.library.data.entity.Category;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.Component;
@@ -54,7 +53,7 @@ public class CategoriesView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new CategoryForm();
+        form = new CategoryForm(service.findGenres(null));
         form.setWidth("25em");
 
         form.addListener(AuthorForm.SaveEvent.class, this::saveCategory);
@@ -94,7 +93,8 @@ public class CategoriesView extends VerticalLayout {
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(Category::getName).setHeader("Nazwa").setSortable(true);
+        grid.addColumn(Category::getName).setHeader("Gatunek literacki").setSortable(true);
+        grid.addColumn(category -> category.getGenre().getName()).setHeader("Rodzaj literacki").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(e -> editCategory(e.getValue()));

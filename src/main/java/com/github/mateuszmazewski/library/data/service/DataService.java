@@ -2,8 +2,10 @@ package com.github.mateuszmazewski.library.data.service;
 
 import com.github.mateuszmazewski.library.data.entity.Author;
 import com.github.mateuszmazewski.library.data.entity.Category;
+import com.github.mateuszmazewski.library.data.entity.Genre;
 import com.github.mateuszmazewski.library.data.repository.AuthorRepository;
 import com.github.mateuszmazewski.library.data.repository.CategoryRepository;
+import com.github.mateuszmazewski.library.data.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +15,14 @@ public class DataService {
 
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+    private final GenreRepository genreRepository;
 
     public DataService(AuthorRepository authorRepository,
-                       CategoryRepository categoryRepository) {
+                       CategoryRepository categoryRepository,
+                       GenreRepository genreRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
+        this.genreRepository = genreRepository;
     }
 
     // ----- Authors -----
@@ -72,5 +77,32 @@ public class DataService {
         }
 
         categoryRepository.save(category);
+    }
+
+    // ----- Genres -----
+
+    public List<Genre> findGenres(String filterText) {
+        if (filterText == null || filterText.isEmpty()) {
+            return genreRepository.findAll();
+        } else {
+            return genreRepository.search(filterText);
+        }
+    }
+
+    public long countGenres() {
+        return genreRepository.count();
+    }
+
+    public void deleteGenre(Genre genre) {
+        genreRepository.delete(genre);
+    }
+
+    public void saveGenre(Genre genre) {
+        if (genre == null) {
+            System.err.println("Genre is null");
+            return;
+        }
+
+        genreRepository.save(genre);
     }
 }
