@@ -33,12 +33,14 @@ public class MainLayout extends AppLayout {
         RouterLink authorsView = new RouterLink("Autorzy", AuthorsView.class);
         RouterLink categoriesView = new RouterLink("Kategorie", CategoriesView.class);
         RouterLink publishersView = new RouterLink("Wydawnictwa", PublishersView.class);
+        RouterLink booksView = new RouterLink("Książki", BooksView.class);
 
         authorsView.setHighlightCondition(HighlightConditions.sameLocation());
         categoriesView.setHighlightCondition(HighlightConditions.sameLocation());
         publishersView.setHighlightCondition(HighlightConditions.sameLocation());
+        booksView.setHighlightCondition(HighlightConditions.sameLocation());
 
-        VerticalLayout viewsList = new VerticalLayout(authorsView, categoriesView, publishersView);
+        VerticalLayout viewsList = new VerticalLayout(authorsView, categoriesView, publishersView, booksView);
         addToDrawer(viewsList);
     }
 }

@@ -1,13 +1,8 @@
 package com.github.mateuszmazewski.library.data.service;
 
-import com.github.mateuszmazewski.library.data.entity.Author;
-import com.github.mateuszmazewski.library.data.entity.Category;
-import com.github.mateuszmazewski.library.data.entity.Genre;
-import com.github.mateuszmazewski.library.data.entity.Publisher;
-import com.github.mateuszmazewski.library.data.repository.AuthorRepository;
-import com.github.mateuszmazewski.library.data.repository.CategoryRepository;
-import com.github.mateuszmazewski.library.data.repository.GenreRepository;
-import com.github.mateuszmazewski.library.data.repository.PublisherRepository;
+import com.github.mateuszmazewski.library.data.entity.*;
+import com.github.mateuszmazewski.library.data.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +14,18 @@ public class DataService {
     private final CategoryRepository categoryRepository;
     private final GenreRepository genreRepository;
     private final PublisherRepository publisherRepository;
+    private final BookRepository bookRepository;
 
     public DataService(AuthorRepository authorRepository,
                        CategoryRepository categoryRepository,
                        GenreRepository genreRepository,
-                       PublisherRepository publisherRepository) {
+                       PublisherRepository publisherRepository,
+                       BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
         this.genreRepository = genreRepository;
         this.publisherRepository = publisherRepository;
+        this.bookRepository = bookRepository;
     }
 
     // ----- Authors -----
@@ -136,5 +134,44 @@ public class DataService {
         }
 
         publisherRepository.save(publisher);
+    }
+
+    // ----- Books -----
+
+    public List<Book> findBooks(String filterTitle,
+                                Integer filterAuthorId,
+                                Integer filterPublisherId,
+                                Integer filterGenreId,
+                                Integer filterCategoryId) {
+        if ((filterTitle == null || filterTitle.isEmpty())
+                && filterAuthorId == null
+                && filterPublisherId == null
+                && filterGenreId == null
+                && filterCategoryId == null) {
+            return bookRepository.findAll();
+        } else {
+            return bookRepository.search(filterTitle,
+                    filterAuthorId,
+                    filterPublisherId,
+                    filterGenreId,
+                    filterCategoryId);
+        }
+    }
+
+    public long countBooks() {
+        return bookRepository.count();
+    }
+
+    public void deleteBook(Book book) {
+        bookRepository.delete(book);
+    }
+
+    public void saveBook(Book book) {
+        if (book == null) {
+            System.err.println("Book is null");
+            return;
+        }
+
+        bookRepository.save(book);
     }
 }
