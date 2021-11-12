@@ -93,7 +93,7 @@ public class PublishersView extends VerticalLayout {
     }
 
     private void clearFilters() {
-        filterName.setValue("");
+        filterName.clear();
     }
 
     private void addPublisher() {

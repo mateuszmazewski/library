@@ -98,8 +98,8 @@ public class AuthorsView extends VerticalLayout {
     }
 
     private void clearFilters() {
-        filterName.setValue("");
-        filterSurname.setValue("");
+        filterName.clear();
+        filterSurname.clear();
     }
 
     private void addAuthor() {
