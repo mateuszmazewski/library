@@ -1,13 +1,7 @@
 package com.github.mateuszmazewski.library.data.generator;
 
-import com.github.mateuszmazewski.library.data.entity.Author;
-import com.github.mateuszmazewski.library.data.entity.Category;
-import com.github.mateuszmazewski.library.data.entity.Genre;
-import com.github.mateuszmazewski.library.data.entity.Publisher;
-import com.github.mateuszmazewski.library.data.repository.AuthorRepository;
-import com.github.mateuszmazewski.library.data.repository.CategoryRepository;
-import com.github.mateuszmazewski.library.data.repository.GenreRepository;
-import com.github.mateuszmazewski.library.data.repository.PublisherRepository;
+import com.github.mateuszmazewski.library.data.entity.*;
+import com.github.mateuszmazewski.library.data.repository.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +15,8 @@ public class DataGenerator {
     public CommandLineRunner loadData(AuthorRepository authorRepository,
                                       CategoryRepository categoryRepository,
                                       GenreRepository genreRepository,
-                                      PublisherRepository publisherRepository) {
+                                      PublisherRepository publisherRepository,
+                                      BookRepository bookRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
@@ -45,60 +40,118 @@ public class DataGenerator {
 
             // ----- AUTHORS -----
 
-            Author a1 = new Author();
-            a1.setName("Adam");
-            a1.setSurname("Mickiewicz");
+            Author mickiewicz = new Author();
+            mickiewicz.setName("Adam");
+            mickiewicz.setSurname("Mickiewicz");
 
-            Author a2 = new Author();
-            a2.setName("Henryk");
-            a2.setSurname("Sienkiewicz");
+            Author sienkiewicz = new Author();
+            sienkiewicz.setName("Henryk");
+            sienkiewicz.setSurname("Sienkiewicz");
 
-            Author a3 = new Author();
-            a3.setName("Andrzej");
-            a3.setSurname("Sapkowski");
+            Author sapkowski = new Author();
+            sapkowski.setName("Andrzej");
+            sapkowski.setSurname("Sapkowski");
 
-            authorRepository.save(a1);
-            authorRepository.save(a2);
-            authorRepository.save(a3);
+            Author shakespeare = new Author();
+            shakespeare.setName("William");
+            shakespeare.setSurname("Shakespeare");
+
+            authorRepository.save(mickiewicz);
+            authorRepository.save(sienkiewicz);
+            authorRepository.save(sapkowski);
+            authorRepository.save(shakespeare);
 
             // ----- CATEGORIES -----
 
-            Category c1 = new Category();
-            c1.setGenre(epic);
-            c1.setName("Powieść");
+            Category novel = new Category();
+            novel.setGenre(epic);
+            novel.setName("Powieść");
 
-            Category c2 = new Category();
-            c2.setGenre(epic);
-            c2.setName("Opowiadanie");
+            Category tale = new Category();
+            tale.setGenre(epic);
+            tale.setName("Opowiadanie");
 
-            Category c3 = new Category();
-            c3.setGenre(poetry);
-            c3.setName("Fraszka");
+            Category epigram = new Category();
+            epigram.setGenre(poetry);
+            epigram.setName("Fraszka");
 
-            categoryRepository.save(c1);
-            categoryRepository.save(c2);
-            categoryRepository.save(c3);
+            Category epos = new Category();
+            epos.setGenre(epic);
+            epos.setName("Epos");
+
+            Category tragedy = new Category();
+            tragedy.setGenre(drama);
+            tragedy.setName("Tragedia");
+
+            Category comedy = new Category();
+            comedy.setGenre(drama);
+            comedy.setName("Komedia");
+
+            categoryRepository.save(novel);
+            categoryRepository.save(tale);
+            categoryRepository.save(epigram);
+            categoryRepository.save(epos);
+            categoryRepository.save(tragedy);
+            categoryRepository.save(comedy);
 
             // ----- PUBLISHERS -----
 
-            Publisher p1 = new Publisher();
-            p1.setName("Wydawnictwa Szkolne i Pedagogiczne");
-            p1.setEmail("wsip@wsip.com.pl");
-            p1.setPhoneNumber("801 220 555");
+            Publisher wsip = new Publisher();
+            wsip.setName("WSiP - Wydawnictwa Szkolne i Pedagogiczne");
+            wsip.setEmail("wsip@wsip.com.pl");
+            wsip.setPhoneNumber("801 220 555");
 
-            Publisher p2 = new Publisher();
-            p2.setName("Nowa Era");
-            p2.setEmail("nowaera@nowaera.pl");
-            p2.setPhoneNumber("801 88 10 10");
+            Publisher supernova = new Publisher();
+            supernova.setName("superNOWA");
+            supernova.setEmail("redakcja@supernowa.pl");
+            supernova.setPhoneNumber("22 825 61 12");
 
-            Publisher p3 = new Publisher();
-            p3.setName("Wydawnictwo Czarne");
-            p3.setEmail("redakcja@czarne.com.pl");
-            p3.setPhoneNumber("18 353 58 93");
+            Publisher greg = new Publisher();
+            greg.setName("Wydawnictwo Greg");
+            greg.setEmail("greg@greg.pl");
+            greg.setPhoneNumber("12 680 15 50");
 
-            publisherRepository.save(p1);
-            publisherRepository.save(p2);
-            publisherRepository.save(p3);
+            publisherRepository.save(wsip);
+            publisherRepository.save(supernova);
+            publisherRepository.save(greg);
+
+            // ----- BOOKS -----
+
+            Book witcher1 = new Book();
+            witcher1.setTitle("Wiedźmin. Tom 1. Ostatnie życzenie");
+            witcher1.setAuthor(sapkowski);
+            witcher1.setPublisher(supernova);
+            witcher1.setCategory(novel);
+
+            Book witcher2 = new Book();
+            witcher2.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
+            witcher2.setAuthor(sapkowski);
+            witcher2.setPublisher(supernova);
+            witcher2.setCategory(novel);
+
+            Book mrThaddeus = new Book();
+            mrThaddeus.setTitle("Pan Tadeusz");
+            mrThaddeus.setAuthor(mickiewicz);
+            mrThaddeus.setPublisher(greg);
+            mrThaddeus.setCategory(epos);
+
+            Book teutonicKnights = new Book();
+            teutonicKnights.setTitle("Krzyżacy");
+            teutonicKnights.setAuthor(sienkiewicz);
+            teutonicKnights.setPublisher(wsip);
+            teutonicKnights.setCategory(novel);
+
+            Book romeoAndJuliet = new Book();
+            romeoAndJuliet.setTitle("Romeo i Julia");
+            romeoAndJuliet.setAuthor(shakespeare);
+            romeoAndJuliet.setPublisher(greg);
+            romeoAndJuliet.setCategory(tragedy);
+
+            bookRepository.save(witcher1);
+            bookRepository.save(witcher2);
+            bookRepository.save(mrThaddeus);
+            bookRepository.save(teutonicKnights);
+            bookRepository.save(romeoAndJuliet);
         };
     }
 
