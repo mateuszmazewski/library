@@ -15,7 +15,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@PageTitle("Kategorie | Biblioteka")
+@PageTitle("Gatunki literackie | Biblioteka")
 @Route(value = "categories", layout = MainLayout.class)
 public class CategoriesView extends VerticalLayout {
     Grid<Category> grid = new Grid<>(Category.class);
@@ -95,7 +95,7 @@ public class CategoriesView extends VerticalLayout {
         clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         clearFiltersButton.addClickListener(e -> clearFilters());
 
-        Button addCategoryButton = new Button("Dodaj kategorię");
+        Button addCategoryButton = new Button("Dodaj gatunek");
         addCategoryButton.addClickListener(e -> addCategory());
 
         HorizontalLayout toolbar = new HorizontalLayout(filterName, filterGenre, clearFiltersButton, addCategoryButton);

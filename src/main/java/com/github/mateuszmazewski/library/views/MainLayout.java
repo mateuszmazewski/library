@@ -31,7 +31,7 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         RouterLink authorsView = new RouterLink("Autorzy", AuthorsView.class);
-        RouterLink categoriesView = new RouterLink("Kategorie", CategoriesView.class);
+        RouterLink categoriesView = new RouterLink("Gatunki literackie", CategoriesView.class);
         RouterLink publishersView = new RouterLink("Wydawnictwa", PublishersView.class);
         RouterLink booksView = new RouterLink("Książki", BooksView.class);
 
