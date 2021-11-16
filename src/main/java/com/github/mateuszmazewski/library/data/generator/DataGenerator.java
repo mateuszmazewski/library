@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDate;
+
 @SpringComponent
 public class DataGenerator {
 
@@ -16,7 +18,8 @@ public class DataGenerator {
                                       CategoryRepository categoryRepository,
                                       GenreRepository genreRepository,
                                       PublisherRepository publisherRepository,
-                                      BookRepository bookRepository) {
+                                      BookRepository bookRepository,
+                                      ReaderRepository readerRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
@@ -152,6 +155,33 @@ public class DataGenerator {
             bookRepository.save(mrThaddeus);
             bookRepository.save(teutonicKnights);
             bookRepository.save(romeoAndJuliet);
+
+            // ----- READERS -----
+
+            Reader kowalski = new Reader();
+            kowalski.setName("Jan");
+            kowalski.setSurname("Kowalski");
+            kowalski.setEmail("jan.kowalski@wp.pl");
+            kowalski.setPhoneNumber("927 584 173");
+            kowalski.setBirthdate(LocalDate.of(1991, 10, 15));
+
+            Reader nowak = new Reader();
+            nowak.setName("Paweł");
+            nowak.setSurname("Nowak");
+            nowak.setEmail("pawelnowak@gmail.com");
+            nowak.setPhoneNumber("583 559 210");
+            nowak.setBirthdate(LocalDate.of(2000, 5, 30));
+
+            Reader ostrowski = new Reader();
+            ostrowski.setName("Marek");
+            ostrowski.setSurname("Ostrowski");
+            ostrowski.setEmail("marek.ostrowski@o2.pl");
+            ostrowski.setPhoneNumber("199 373 271");
+            ostrowski.setBirthdate(LocalDate.of(1999, 1, 5));
+
+            readerRepository.save(kowalski);
+            readerRepository.save(nowak);
+            readerRepository.save(ostrowski);
         };
     }
 

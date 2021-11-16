@@ -2,7 +2,6 @@ package com.github.mateuszmazewski.library.data.service;
 
 import com.github.mateuszmazewski.library.data.entity.*;
 import com.github.mateuszmazewski.library.data.repository.*;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,17 +14,20 @@ public class DataService {
     private final GenreRepository genreRepository;
     private final PublisherRepository publisherRepository;
     private final BookRepository bookRepository;
+    private final ReaderRepository readerRepository;
 
     public DataService(AuthorRepository authorRepository,
                        CategoryRepository categoryRepository,
                        GenreRepository genreRepository,
                        PublisherRepository publisherRepository,
-                       BookRepository bookRepository) {
+                       BookRepository bookRepository,
+                       ReaderRepository readerRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
         this.genreRepository = genreRepository;
         this.publisherRepository = publisherRepository;
         this.bookRepository = bookRepository;
+        this.readerRepository = readerRepository;
     }
 
     // ----- Authors -----
@@ -173,5 +175,32 @@ public class DataService {
         }
 
         bookRepository.save(book);
+    }
+
+    // ----- Readers -----
+
+    public List<Reader> findReaders(String filterName, String filterSurname) {
+        if ((filterName == null || filterName.isEmpty()) && (filterSurname == null || filterSurname.isEmpty())) {
+            return readerRepository.findAll();
+        } else {
+            return readerRepository.search(filterName, filterSurname);
+        }
+    }
+
+    public long countReaders() {
+        return readerRepository.count();
+    }
+
+    public void deleteReader(Reader reader) {
+        readerRepository.delete(reader);
+    }
+
+    public void saveReader(Reader reader) {
+        if (reader == null) {
+            System.err.println("Reader is null");
+            return;
+        }
+
+        readerRepository.save(reader);
     }
 }
