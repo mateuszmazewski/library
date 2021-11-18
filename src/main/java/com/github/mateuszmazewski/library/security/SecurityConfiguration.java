@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.library.security;
 
+import com.github.mateuszmazewski.library.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,9 +25,17 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        setLoginView(http, LoginView.class);
+
         http.csrf().disable();
 
         http.authorizeRequests()
+                .antMatchers("/authors").hasAnyRole("USER, ADMIN")
+                .antMatchers("/books").hasAnyRole("USER, ADMIN")
+                .antMatchers("/categories").hasAnyRole("USER, ADMIN")
+                .antMatchers("/genres").hasAnyRole("USER, ADMIN")
+                .antMatchers("/publishers").hasAnyRole("USER, ADMIN")
+                .antMatchers("/readers").hasAnyRole("USER, ADMIN")
                 .antMatchers("/").permitAll()
                 .and().formLogin();
     }

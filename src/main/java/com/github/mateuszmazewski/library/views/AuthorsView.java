@@ -14,7 +14,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Autorzy | Biblioteka")
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "authors", layout = MainLayout.class)
 public class AuthorsView extends VerticalLayout {
     Grid<Author> grid = new Grid<>(Author.class);
     TextField filterName = new TextField("Imię");
