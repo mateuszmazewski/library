@@ -1,7 +1,9 @@
 package com.github.mateuszmazewski.library.views;
 
+import com.github.mateuszmazewski.library.security.SecurityService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,8 +12,10 @@ import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 
 public class MainLayout extends AppLayout {
+    private final SecurityService securityService;
 
-    public MainLayout() {
+    public MainLayout(SecurityService securityService) {
+        this.securityService = securityService;
         createHeader();
         createDrawer();
     }
@@ -19,7 +23,10 @@ public class MainLayout extends AppLayout {
     private void createHeader() {
         H3 logo = new H3("Zarządzanie biblioteką");
         logo.addClassNames("text-l", "m-s"); //margin-small
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
+
+        Button logoutButton = new Button("Wyloguj się", e -> securityService.logout());
+
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logoutButton);
 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
