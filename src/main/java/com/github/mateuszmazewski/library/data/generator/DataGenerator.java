@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -19,10 +21,23 @@ public class DataGenerator {
                                       GenreRepository genreRepository,
                                       PublisherRepository publisherRepository,
                                       BookRepository bookRepository,
-                                      ReaderRepository readerRepository) {
+                                      ReaderRepository readerRepository,
+                                      UserRepository userRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
+
+            // ----- USERS -----
+
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setRoles("ROLE_ADMIN");
+            admin.setActive(true);
+
+            userRepository.save(admin);
 
             // ----- GENRES -----
 
