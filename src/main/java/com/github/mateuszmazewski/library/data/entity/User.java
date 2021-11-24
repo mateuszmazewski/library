@@ -4,13 +4,15 @@ import com.github.mateuszmazewski.library.data.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class User extends AbstractEntity {
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(unique = true)
     private String username;
 
     @NotBlank
@@ -18,6 +20,10 @@ public class User extends AbstractEntity {
 
     @NotNull
     private boolean active;
+
+    @NotNull
+    @OneToOne
+    private Employee employee;
 
     private String roles; // comma-separated roles e.g. ROLE_ADMIN,ROLE_USER
 
@@ -51,5 +57,17 @@ public class User extends AbstractEntity {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public String isActiveString() {
+        return active ? "Aktywny" : "Nieaktywny";
     }
 }

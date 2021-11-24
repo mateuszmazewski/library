@@ -29,7 +29,11 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
         http.csrf().disable();
 
+        //TODO - Vaadin Routing doesn't use Spring Security by default
+
         http.authorizeRequests()
+                .antMatchers("/employees").hasRole("ADMIN")
+                .antMatchers("/users").hasRole("ADMIN")
                 .antMatchers("/authors").hasAnyRole("USER, ADMIN")
                 .antMatchers("/books").hasAnyRole("USER, ADMIN")
                 .antMatchers("/categories").hasAnyRole("USER, ADMIN")

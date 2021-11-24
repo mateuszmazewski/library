@@ -22,10 +22,45 @@ public class DataGenerator {
                                       PublisherRepository publisherRepository,
                                       BookRepository bookRepository,
                                       ReaderRepository readerRepository,
+                                      EmployeeRepository employeeRepository,
                                       UserRepository userRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
+
+            // ----- EMPLOYEES -----
+
+            Employee boss = new Employee();
+            boss.setName("Grzegorz");
+            boss.setSurname("Brzęczyszczykiewicz");
+            boss.setPosition("Dyrektor");
+            boss.setBirthdate(LocalDate.of(1965, 2, 8));
+            boss.setEmail("szef@gmail.com");
+            boss.setPhoneNumber("917 538 943");
+            boss.setEmployedSinceDate(LocalDate.of(2001, 6, 14));
+
+            Employee librarian1 = new Employee();
+            librarian1.setName("Jakub");
+            librarian1.setSurname("Puchatek");
+            librarian1.setPosition("Bibliotekarz");
+            librarian1.setBirthdate(LocalDate.of(1988, 12, 18));
+            librarian1.setEmail("jpuchatek@o2.pl");
+            librarian1.setPhoneNumber("846 759 301");
+            librarian1.setEmployedSinceDate(LocalDate.of(2020, 8, 11));
+
+            Employee librarian2 = new Employee();
+            librarian2.setName("Merida");
+            librarian2.setSurname("Waleczna");
+            librarian2.setPosition("Bibliotekarz");
+            librarian2.setBirthdate(LocalDate.of(1992, 5, 6));
+            librarian2.setEmail("meridawaleczna@gmail.com");
+            librarian2.setPhoneNumber("105 206 834");
+            librarian2.setEmployedSinceDate(LocalDate.of(2019, 3, 22));
+            librarian2.setEmployedSinceDate(LocalDate.of(2021, 11, 24));
+
+            employeeRepository.save(boss);
+            employeeRepository.save(librarian1);
+            employeeRepository.save(librarian2);
 
             // ----- USERS -----
 
@@ -34,10 +69,27 @@ public class DataGenerator {
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setRoles("ROLE_ADMIN");
+            admin.setRoles("ROLE_ADMIN,ROLE_USER");
             admin.setActive(true);
+            admin.setEmployee(boss);
+
+            User userLibrarian1 = new User();
+            userLibrarian1.setUsername("kubus");
+            userLibrarian1.setPassword(passwordEncoder.encode("puchatek"));
+            userLibrarian1.setRoles("ROLE_USER");
+            userLibrarian1.setActive(true);
+            userLibrarian1.setEmployee(librarian1);
+
+            User userLibrarian2 = new User();
+            userLibrarian2.setUsername("merida");
+            userLibrarian2.setPassword(passwordEncoder.encode("waleczna"));
+            userLibrarian2.setRoles("ROLE_USER");
+            userLibrarian2.setActive(false);
+            userLibrarian2.setEmployee(librarian2);
 
             userRepository.save(admin);
+            userRepository.save(userLibrarian1);
+            userRepository.save(userLibrarian2);
 
             // ----- GENRES -----
 

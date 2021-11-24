@@ -15,19 +15,25 @@ public class DataService {
     private final PublisherRepository publisherRepository;
     private final BookRepository bookRepository;
     private final ReaderRepository readerRepository;
+    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     public DataService(AuthorRepository authorRepository,
                        CategoryRepository categoryRepository,
                        GenreRepository genreRepository,
                        PublisherRepository publisherRepository,
                        BookRepository bookRepository,
-                       ReaderRepository readerRepository) {
+                       ReaderRepository readerRepository,
+                       EmployeeRepository employeeRepository,
+                       UserRepository userRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
         this.genreRepository = genreRepository;
         this.publisherRepository = publisherRepository;
         this.bookRepository = bookRepository;
         this.readerRepository = readerRepository;
+        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
     }
 
     // ----- Authors -----
@@ -202,5 +208,59 @@ public class DataService {
         }
 
         readerRepository.save(reader);
+    }
+
+    // ----- Employees -----
+
+    public List<Employee> findEmployees(String filterName, String filterSurname, String filterPosition) {
+        if ((filterName == null || filterName.isEmpty()) && (filterSurname == null || filterSurname.isEmpty()) && (filterPosition == null || filterPosition.isEmpty())) {
+            return employeeRepository.findAll();
+        } else {
+            return employeeRepository.search(filterName, filterSurname, filterPosition);
+        }
+    }
+
+    public long countEmployees() {
+        return employeeRepository.count();
+    }
+
+    public void deleteEmployee(Employee employee) {
+        employeeRepository.delete(employee);
+    }
+
+    public void saveEmployee(Employee employee) {
+        if (employee == null) {
+            System.err.println("Employee is null");
+            return;
+        }
+
+        employeeRepository.save(employee);
+    }
+
+    // ----- Users -----
+
+    public List<User> findUsers(String filterUsername, Integer filterEmployeeId, Boolean filterIsActive) {
+        if ((filterUsername == null || filterUsername.isEmpty()) && filterEmployeeId == null && filterIsActive == null) {
+            return userRepository.findAll();
+        } else {
+            return userRepository.search(filterUsername, filterEmployeeId, filterIsActive);
+        }
+    }
+
+    public long countUsers() {
+        return userRepository.count();
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+
+    public void saveUser(User user) {
+        if (user == null) {
+            System.err.println("User is null");
+            return;
+        }
+
+        userRepository.save(user);
     }
 }
