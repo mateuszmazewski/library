@@ -12,20 +12,33 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import javax.servlet.http.HttpServletRequest;
+
 @PageTitle("Gatunki literackie | Biblioteka")
 @Route(value = "categories", layout = MainLayout.class)
-public class CategoriesView extends VerticalLayout {
+public class CategoriesView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Category> grid = new Grid<>(Category.class);
     TextField filterName = new TextField("Gatunek literacki");
     ComboBox<Genre> filterGenre = new ComboBox<>("Rodzaj literacki");
     CategoryForm form;
     private final DataService service;
+    private final HttpServletRequest req;
 
-    public CategoriesView(DataService service) {
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (!(req.isUserInRole("ADMIN") || req.isUserInRole("USER"))) {
+            beforeEnterEvent.rerouteTo(AccessDeniedView.class);
+        }
+    }
+
+    public CategoriesView(DataService service, HttpServletRequest req) {
         this.service = service;
+        this.req = req;
         setSizeFull();
 
         configureGrid();

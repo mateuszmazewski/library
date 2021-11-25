@@ -11,14 +11,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import javax.servlet.http.HttpServletRequest;
 
 //TODO: improve filtering by genre/category
 
 @PageTitle("Książki | Biblioteka")
 @Route(value = "books", layout = MainLayout.class)
-public class BooksView extends VerticalLayout {
+public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Book> grid = new Grid<>(Book.class);
     TextField filterTitle = new TextField("Tytuł");
     ComboBox<Author> filterAuthor = new ComboBox<>("Autor");
@@ -27,9 +31,18 @@ public class BooksView extends VerticalLayout {
     ComboBox<Category> filterCategory = new ComboBox<>("Gatunek literacki");
     BookForm form;
     private final DataService service;
+    private final HttpServletRequest req;
 
-    public BooksView(DataService service) {
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (!(req.isUserInRole("ADMIN") || req.isUserInRole("USER"))) {
+            beforeEnterEvent.rerouteTo(AccessDeniedView.class);
+        }
+    }
+
+    public BooksView(DataService service, HttpServletRequest req) {
         this.service = service;
+        this.req = req;
         setSizeFull();
 
         configureGrid();

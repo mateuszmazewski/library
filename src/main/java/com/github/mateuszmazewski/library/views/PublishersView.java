@@ -10,19 +10,32 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import javax.servlet.http.HttpServletRequest;
+
 @PageTitle("Wydawnictwa | Biblioteka")
 @Route(value = "publishers", layout = MainLayout.class)
-public class PublishersView extends VerticalLayout {
+public class PublishersView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Publisher> grid = new Grid<>(Publisher.class);
     TextField filterName = new TextField("Nazwa");
     PublisherForm form;
     private final DataService service;
+    private final HttpServletRequest req;
 
-    public PublishersView(DataService service) {
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (!(req.isUserInRole("ADMIN") || req.isUserInRole("USER"))) {
+            beforeEnterEvent.rerouteTo(AccessDeniedView.class);
+        }
+    }
+
+    public PublishersView(DataService service, HttpServletRequest req) {
         this.service = service;
+        this.req = req;
         setSizeFull();
 
         configureGrid();
