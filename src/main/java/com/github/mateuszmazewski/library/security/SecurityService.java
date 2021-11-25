@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityService {
 
-    public static UserDetails getAuthenticatedUser() {
+    public static String getAuthenticatedUserUsername() {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            return (UserDetails) principal;
+            return ((UserDetails) principal).getUsername();
         }
         // Anonymous or no authentication.
         return null;

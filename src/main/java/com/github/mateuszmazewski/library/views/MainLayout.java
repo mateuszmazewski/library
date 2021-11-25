@@ -23,16 +23,16 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H3 logo = new H3("Zarządzanie biblioteką");
-        String username = SecurityService.getAuthenticatedUser() != null ?
-                SecurityService.getAuthenticatedUser().getUsername() : "";
-        H5 loggedInUser = new H5("Zalogowano jako: " + username);
+        String username = SecurityService.getAuthenticatedUserUsername();
+        H5 loggedInUser;
 
         logo.addClassNames("text-l", "m-s"); //margin-small
 
         Button logoutButton = new Button("Wyloguj się", e -> securityService.logout());
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
-        if (!"".equals(username)) {
+        if (username != null && !username.isEmpty()) {
+            loggedInUser = new H5("Zalogowano jako: " + username);
             header.add(loggedInUser);
         }
         header.add(logoutButton);
