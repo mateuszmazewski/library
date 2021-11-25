@@ -14,24 +14,37 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import javax.servlet.http.HttpServletRequest;
+
 @PageTitle("Użytkownicy | Biblioteka")
 @Route(value = "users", layout = MainLayout.class)
-public class UsersView extends VerticalLayout {
+public class UsersView extends VerticalLayout implements BeforeEnterObserver {
     Grid<User> grid = new Grid<>(User.class);
     TextField filterUsername = new TextField("Nazwa użytkownika");
     ComboBox<Employee> filterEmployee = new ComboBox<>("Pracownik");
     ComboBox<String> filterActive = new ComboBox<>("Aktywny");
     UserForm form;
     private final DataService service;
+    private final HttpServletRequest req;
     public final static String ALL_USERS = "Wszyscy";
     public final static String ACTIVE_USERS = "Aktywni";
     public final static String INACTIVE_USERS = "Nieaktywni";
 
-    public UsersView(DataService service) {
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (!req.isUserInRole("ADMIN")) {
+            beforeEnterEvent.rerouteTo(AccessDeniedView.class);
+        }
+    }
+
+    public UsersView(DataService service, HttpServletRequest req) {
         this.service = service;
+        this.req = req;
         setSizeFull();
 
         configureGrid();
