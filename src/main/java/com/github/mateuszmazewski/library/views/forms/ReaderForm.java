@@ -1,6 +1,6 @@
-package com.github.mateuszmazewski.library.views;
+package com.github.mateuszmazewski.library.views.forms;
 
-import com.github.mateuszmazewski.library.data.entity.Employee;
+import com.github.mateuszmazewski.library.data.entity.Reader;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -8,38 +8,35 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class EmployeeForm extends EntityForm {
-    Binder<Employee> binder = new BeanValidationBinder<>(Employee.class);
+public class ReaderForm extends EntityForm {
+    Binder<Reader> binder = new BeanValidationBinder<>(Reader.class);
 
     TextField name = new TextField("Imię");
     TextField surname = new TextField("Nazwisko");
-    TextField position = new TextField("Stanowisko");
     EmailField email = new EmailField("E-mail");
     TextField phoneNumber = new TextField("Numer telefonu");
     DatePicker birthdate = new DatePicker("Data urodzenia");
-    DatePicker employedSinceDate = new DatePicker("Zatrudniony od");
-    DatePicker employedToDate = new DatePicker("Zatrudniony do");
-    private Employee employee;
+    private Reader reader;
 
-    public EmployeeForm() {
+    public ReaderForm() {
         super();
         binder.bindInstanceFields(this);
 
-        add(name, surname, position, email, phoneNumber, birthdate, employedSinceDate, employedToDate, createButtonLayout());
+        add(name, surname, email, phoneNumber, birthdate, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
-        deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, employee)));
+        deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, reader)));
         cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-        binder.readBean(employee);
+    public void setReader(Reader reader) {
+        this.reader = reader;
+        binder.readBean(reader);
     }
 
     private void validateAndSave() {
         try {
-            binder.writeBean(employee);
-            fireEvent(new SaveEvent(this, employee));
+            binder.writeBean(reader);
+            fireEvent(new SaveEvent(this, reader));
         } catch (ValidationException e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.github.mateuszmazewski.library.views;
+package com.github.mateuszmazewski.library.views.forms;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
 import com.vaadin.flow.component.Component;

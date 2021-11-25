@@ -1,4 +1,4 @@
-package com.github.mateuszmazewski.library.views;
+package com.github.mateuszmazewski.library.views.forms;
 
 import com.github.mateuszmazewski.library.data.entity.Employee;
 import com.github.mateuszmazewski.library.data.entity.User;

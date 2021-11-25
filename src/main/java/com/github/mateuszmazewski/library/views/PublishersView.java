@@ -2,6 +2,7 @@ package com.github.mateuszmazewski.library.views;
 
 import com.github.mateuszmazewski.library.data.entity.Publisher;
 import com.github.mateuszmazewski.library.data.service.DataService;
+import com.github.mateuszmazewski.library.views.forms.PublisherForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
