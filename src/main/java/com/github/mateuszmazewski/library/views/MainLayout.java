@@ -5,6 +5,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,11 +23,19 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H3 logo = new H3("Zarządzanie biblioteką");
+        String username = SecurityService.getAuthenticatedUser() != null ?
+                SecurityService.getAuthenticatedUser().getUsername() : "";
+        H5 loggedInUser = new H5("Zalogowano jako: " + username);
+
         logo.addClassNames("text-l", "m-s"); //margin-small
 
         Button logoutButton = new Button("Wyloguj się", e -> securityService.logout());
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logoutButton);
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
+        if (!"".equals(username)) {
+            header.add(loggedInUser);
+        }
+        header.add(logoutButton);
 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
