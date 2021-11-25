@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityService {
 
-    public static String getAuthenticatedUserUsername() {
+    public String getAuthenticatedUserUsername() {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
