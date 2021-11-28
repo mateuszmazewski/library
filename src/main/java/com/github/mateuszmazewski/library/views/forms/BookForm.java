@@ -11,8 +11,6 @@ import com.vaadin.flow.data.binder.ValidationException;
 import java.util.Calendar;
 import java.util.List;
 
-//TODO: Improve selecting genre/category in form
-
 public class BookForm extends EntityForm {
     Binder<Book> binder = new BeanValidationBinder<>(Book.class);
 
@@ -21,12 +19,11 @@ public class BookForm extends EntityForm {
     ComboBox<Author> author = new ComboBox<>("Autor");
     ComboBox<Publisher> publisher = new ComboBox<>("Wydawnictwo");
     IntegerField publicationYear = new IntegerField("Rok wydania");
-    //ComboBox<Genre> genre = new ComboBox<>("Rodzaj literacki");
     ComboBox<Category> category = new ComboBox<>("Gatunek literacki");
     TextField isbn = new TextField("ISBN");
     private Book book;
 
-    public BookForm(List<Author> authors, List<Publisher> publishers, List<Genre> genres, List<Category> categories) {
+    public BookForm(List<Author> authors, List<Publisher> publishers, List<Category> categories) {
         super();
         binder.bindInstanceFields(this);
 
@@ -36,8 +33,7 @@ public class BookForm extends EntityForm {
         author.setItemLabelGenerator(Author::toString);
         publisher.setItems(publishers);
         publisher.setItemLabelGenerator(Publisher::getName);
-        //genre.setItems(genres);
-        //genre.setItemLabelGenerator(Genre::getName);
+
         category.setItems(categories);
         category.setItemLabelGenerator(Category::getName);
 
@@ -55,35 +51,11 @@ public class BookForm extends EntityForm {
                         "ISBN składa się z samych cyfr")
                 .bind(Book::getIsbn, Book::setIsbn);
 
-        //genre.addValueChangeListener(e -> filterCategoriesByGenre(categories));
-
         add(libraryBookId, title, author, publisher, publicationYear, category, isbn, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
         deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, book)));
         cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
     }
-
-    /*
-    private void filterCategoriesByGenre(List<Category> allCategories) {
-        Genre selectedGenre = genre.getValue();
-        Integer selectedGenreId = selectedGenre != null ? selectedGenre.getId() : null;
-        Category selectedCategory = category.getValue();
-
-        if (selectedGenre != null) {
-            category.setEnabled(true);
-            List<Category> categoriesFilteredByGenre = allCategories.stream()
-                    .filter(category -> category.getGenre().getId().equals(selectedGenreId))
-                    .collect(Collectors.toList());
-            category.setItems(categoriesFilteredByGenre);
-
-            if (selectedCategory.getGenre().getId().equals(selectedGenreId)) {
-                category.setValue(selectedCategory);
-            }
-        } else {
-            category.setEnabled(false);
-        }
-    }
-     */
 
     public void setBook(Book book) {
         this.book = book;

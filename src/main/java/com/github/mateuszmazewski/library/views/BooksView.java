@@ -21,8 +21,6 @@ import com.vaadin.flow.router.Route;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 
-//TODO: improve filtering by genre/category
-
 @PageTitle("Książki | Biblioteka")
 @Route(value = "books", layout = MainLayout.class)
 public class BooksView extends VerticalLayout implements BeforeEnterObserver {
@@ -96,7 +94,6 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
         form = new BookForm(service.findAuthors(null, null),
                 service.findPublishers(null),
-                service.findGenres(null),
                 service.findCategories(null, genreId));
         form.setWidth("25em");
 
