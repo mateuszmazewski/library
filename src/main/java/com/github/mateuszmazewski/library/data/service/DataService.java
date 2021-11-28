@@ -146,23 +146,32 @@ public class DataService {
 
     // ----- Books -----
 
-    public List<Book> findBooks(String filterTitle,
+    public List<Book> findBooks(String filterLibraryBookId,
+                                String filterTitle,
                                 Integer filterAuthorId,
                                 Integer filterPublisherId,
+                                Integer filterPublicationYear,
                                 Integer filterGenreId,
-                                Integer filterCategoryId) {
-        if ((filterTitle == null || filterTitle.isEmpty())
+                                Integer filterCategoryId,
+                                String filterIsbn) {
+        if ((filterLibraryBookId == null || filterLibraryBookId.isEmpty())
+                && (filterTitle == null || filterTitle.isEmpty())
                 && filterAuthorId == null
                 && filterPublisherId == null
                 && filterGenreId == null
-                && filterCategoryId == null) {
+                && filterCategoryId == null
+                && filterPublicationYear == null
+                && (filterIsbn == null || filterIsbn.isEmpty())) {
             return bookRepository.findAll();
         } else {
-            return bookRepository.search(filterTitle,
+            return bookRepository.search(filterLibraryBookId,
+                    filterTitle,
                     filterAuthorId,
                     filterPublisherId,
+                    filterPublicationYear,
                     filterGenreId,
-                    filterCategoryId);
+                    filterCategoryId,
+                    filterIsbn);
         }
     }
 

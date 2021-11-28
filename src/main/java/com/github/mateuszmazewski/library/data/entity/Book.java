@@ -2,6 +2,7 @@ package com.github.mateuszmazewski.library.data.entity;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +10,10 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Book extends AbstractEntity {
+    @NotBlank
+    @Column(unique = true)
+    private String libraryBookId;
+
     @NotBlank
     private String title;
 
@@ -22,6 +27,17 @@ public class Book extends AbstractEntity {
 
     @ManyToOne
     private Publisher publisher;
+
+    private String isbn;
+    private Integer publicationYear;
+
+    public String getLibraryBookId() {
+        return libraryBookId;
+    }
+
+    public void setLibraryBookId(String libraryBookId) {
+        this.libraryBookId = libraryBookId;
+    }
 
     public String getTitle() {
         return title;
@@ -53,5 +69,21 @@ public class Book extends AbstractEntity {
 
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public Integer getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(Integer publicationYear) {
+        this.publicationYear = publicationYear;
     }
 }

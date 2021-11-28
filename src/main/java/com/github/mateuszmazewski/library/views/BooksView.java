@@ -10,6 +10,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -18,6 +19,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 
 //TODO: improve filtering by genre/category
 
@@ -25,11 +27,14 @@ import javax.servlet.http.HttpServletRequest;
 @Route(value = "books", layout = MainLayout.class)
 public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Book> grid = new Grid<>(Book.class);
+    TextField filterLibraryBookId = new TextField("Identyfikator");
     TextField filterTitle = new TextField("Tytuł");
     ComboBox<Author> filterAuthor = new ComboBox<>("Autor");
     ComboBox<Publisher> filterPublisher = new ComboBox<>("Wydawnictwo");
+    IntegerField filterPublicationYear = new IntegerField("Rok wydania");
     ComboBox<Genre> filterGenre = new ComboBox<>("Rodzaj literacki");
     ComboBox<Category> filterCategory = new ComboBox<>("Gatunek literacki");
+    TextField filterIsbn = new TextField("ISBN");
     BookForm form;
     private final DataService service;
     private final HttpServletRequest req;
@@ -63,13 +68,18 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     private void updateList() {
         Integer authorId = filterAuthor.getValue() != null ? filterAuthor.getValue().getId() : null;
         Integer publisherId = filterPublisher.getValue() != null ? filterPublisher.getValue().getId() : null;
+        Integer publicationYear = filterPublicationYear.getValue();
         Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
         Integer categoryId = filterCategory.getValue() != null ? filterCategory.getValue().getId() : null;
-        grid.setItems(service.findBooks(filterTitle.getValue(),
+        grid.setItems(service.findBooks(
+                filterLibraryBookId.getValue(),
+                filterTitle.getValue(),
                 authorId,
                 publisherId,
+                publicationYear,
                 genreId,
-                categoryId));
+                categoryId,
+                filterIsbn.getValue()));
     }
 
     private Component getContent() {
@@ -108,6 +118,10 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private Component getToolbar() {
+        filterLibraryBookId.setClearButtonVisible(true);
+        filterLibraryBookId.addValueChangeListener(e -> updateList());
+        filterLibraryBookId.setValueChangeMode(ValueChangeMode.LAZY);
+
         filterTitle.setClearButtonVisible(true);
         filterTitle.setValueChangeMode(ValueChangeMode.LAZY);
         filterTitle.addValueChangeListener(e -> updateList());
@@ -122,6 +136,11 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         filterPublisher.setClearButtonVisible(true);
         filterPublisher.addValueChangeListener(e -> updateList());
 
+        filterPublicationYear.addValueChangeListener(e -> updateList());
+        filterPublicationYear.setValueChangeMode(ValueChangeMode.LAZY);
+        filterPublicationYear.setMin(1000);
+        filterPublicationYear.setMax(Calendar.getInstance().get(Calendar.YEAR));
+
         filterGenre.setItems(service.findGenres(null));
         filterGenre.setItemLabelGenerator(Genre::getName);
         filterGenre.setClearButtonVisible(true);
@@ -133,6 +152,10 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         filterCategory.setClearButtonVisible(true);
         filterCategory.addValueChangeListener(e -> updateList());
 
+        filterIsbn.setClearButtonVisible(true);
+        filterIsbn.addValueChangeListener(e -> updateList());
+        filterIsbn.setValueChangeMode(ValueChangeMode.LAZY);
+
         Button clearFiltersButton = new Button("Wyczyść filtry");
         clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         clearFiltersButton.addClickListener(e -> clearFilters());
@@ -140,11 +163,15 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         Button addBookButton = new Button("Dodaj książkę");
         addBookButton.addClickListener(e -> addBook());
 
-        HorizontalLayout filters = new HorizontalLayout(filterTitle,
+        HorizontalLayout filters = new HorizontalLayout(
+                filterLibraryBookId,
+                filterTitle,
                 filterAuthor,
                 filterPublisher,
+                filterPublicationYear,
                 filterGenre,
-                filterCategory);
+                filterCategory,
+                filterIsbn);
         HorizontalLayout buttons = new HorizontalLayout(clearFiltersButton, addBookButton);
         filters.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         buttons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
@@ -153,11 +180,14 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void clearFilters() {
+        filterLibraryBookId.clear();
         filterTitle.clear();
         filterAuthor.clear();
         filterPublisher.clear();
+        filterPublicationYear.clear();
         filterGenre.clear();
         filterCategory.clear();
+        filterIsbn.clear();
     }
 
     private void addBook() {
@@ -168,11 +198,14 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
+        grid.addColumn(Book::getLibraryBookId).setHeader("Identyfikator").setSortable(true);
         grid.addColumn(Book::getTitle).setHeader("Tytuł").setSortable(true);
         grid.addColumn(book -> book.getAuthor().toString()).setHeader("Autor").setSortable(true);
         grid.addColumn(book -> book.getPublisher() != null ? book.getPublisher().getName() : "").setHeader("Wydawnictwo").setSortable(true);
+        grid.addColumn(book -> book.getPublicationYear() != null ? book.getPublicationYear().intValue() : "").setHeader("Rok wydania").setSortable(true);
         grid.addColumn(book -> book.getCategory().getGenre().getName()).setHeader("Rodzaj literacki").setSortable(true);
         grid.addColumn(book -> book.getCategory().getName()).setHeader("Gatunek literacki").setSortable(true);
+        grid.addColumn(Book::getIsbn).setHeader("ISBN").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(e -> editBook(e.getValue()));

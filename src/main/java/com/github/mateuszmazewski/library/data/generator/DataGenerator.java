@@ -188,40 +188,85 @@ public class DataGenerator {
             // ----- BOOKS -----
 
             Book witcher1 = new Book();
+            witcher1.setLibraryBookId("E-00001");
             witcher1.setTitle("Wiedźmin. Tom 1. Ostatnie życzenie");
             witcher1.setAuthor(sapkowski);
             witcher1.setPublisher(supernova);
+            witcher1.setPublicationYear(2014);
             witcher1.setCategory(novel);
+            witcher1.setIsbn("9780316029186");
 
             Book witcher2 = new Book();
+            witcher2.setLibraryBookId("E-00002");
             witcher2.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
             witcher2.setAuthor(sapkowski);
             witcher2.setPublisher(supernova);
+            witcher2.setPublicationYear(2019);
             witcher2.setCategory(novel);
+            witcher2.setIsbn("9780316389709");
+
+            Book witcher3 = new Book();
+            witcher3.setLibraryBookId("E-00003");
+            witcher3.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
+            witcher3.setAuthor(sapkowski);
+            witcher3.setPublisher(supernova);
+            witcher3.setPublicationYear(2019);
+            witcher3.setCategory(novel);
+            witcher3.setIsbn("9780316389709");
+
+            Book witcher4 = new Book();
+            witcher4.setLibraryBookId("E-00004");
+            witcher4.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
+            witcher4.setAuthor(sapkowski);
+            witcher4.setPublisher(supernova);
+            witcher4.setPublicationYear(2019);
+            witcher4.setCategory(novel);
+            witcher4.setIsbn("9780316389709");
 
             Book mrThaddeus = new Book();
+            mrThaddeus.setLibraryBookId("E-00005");
             mrThaddeus.setTitle("Pan Tadeusz");
             mrThaddeus.setAuthor(mickiewicz);
             mrThaddeus.setPublisher(greg);
+            mrThaddeus.setPublicationYear(2021);
             mrThaddeus.setCategory(epos);
+            mrThaddeus.setIsbn("9788373271920");
 
             Book teutonicKnights = new Book();
+            teutonicKnights.setLibraryBookId("E-00006");
             teutonicKnights.setTitle("Krzyżacy");
             teutonicKnights.setAuthor(sienkiewicz);
             teutonicKnights.setPublisher(wsip);
+            teutonicKnights.setPublicationYear(2018);
             teutonicKnights.setCategory(novel);
+            teutonicKnights.setIsbn("9788373271821");
 
-            Book romeoAndJuliet = new Book();
-            romeoAndJuliet.setTitle("Romeo i Julia");
-            romeoAndJuliet.setAuthor(shakespeare);
-            romeoAndJuliet.setPublisher(greg);
-            romeoAndJuliet.setCategory(tragedy);
+            Book romeoAndJuliet1 = new Book();
+            romeoAndJuliet1.setLibraryBookId("D-00001");
+            romeoAndJuliet1.setTitle("Romeo i Julia");
+            romeoAndJuliet1.setAuthor(shakespeare);
+            romeoAndJuliet1.setPublisher(greg);
+            romeoAndJuliet1.setPublicationYear(2021);
+            romeoAndJuliet1.setCategory(tragedy);
+            romeoAndJuliet1.setIsbn("9788373270282");
+
+            Book romeoAndJuliet2 = new Book();
+            romeoAndJuliet2.setLibraryBookId("D-00002");
+            romeoAndJuliet2.setTitle("Romeo i Julia");
+            romeoAndJuliet2.setAuthor(shakespeare);
+            romeoAndJuliet2.setPublisher(greg);
+            romeoAndJuliet2.setPublicationYear(2021);
+            romeoAndJuliet2.setCategory(tragedy);
+            romeoAndJuliet2.setIsbn("9788373270282");
 
             bookRepository.save(witcher1);
             bookRepository.save(witcher2);
+            bookRepository.save(witcher3);
+            bookRepository.save(witcher4);
             bookRepository.save(mrThaddeus);
             bookRepository.save(teutonicKnights);
-            bookRepository.save(romeoAndJuliet);
+            bookRepository.save(romeoAndJuliet1);
+            bookRepository.save(romeoAndJuliet2);
 
             // ----- READERS -----
 
