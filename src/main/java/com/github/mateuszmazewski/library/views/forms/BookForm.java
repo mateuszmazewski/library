@@ -1,6 +1,8 @@
 package com.github.mateuszmazewski.library.views.forms;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.*;
+import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,7 +25,7 @@ public class BookForm extends EntityForm {
     TextField isbn = new TextField("ISBN");
     private Book book;
 
-    public BookForm(List<Author> authors, List<Publisher> publishers, List<Category> categories) {
+    public BookForm(List<Author> authors, List<Publisher> publishers, List<Category> categories, DataService service) {
         super();
         binder.bindInstanceFields(this);
 
@@ -42,13 +44,21 @@ public class BookForm extends EntityForm {
         publicationYear.setMax(Calendar.getInstance().get(Calendar.YEAR));
 
         isbn.setClearButtonVisible(true);
+        binder.forField(libraryBookId)
+                .withValidator(
+                        libraryBookId -> libraryBookId != null && !libraryBookId.isEmpty(),
+                        Messages.NOT_EMPTY)
+                .withValidator(
+                        libraryBookId -> service.findBookByLibraryBookId(libraryBookId).isEmpty(),
+                        Messages.UNIQUE)
+                .bind(Book::getLibraryBookId, Book::setLibraryBookId);
         binder.forField(isbn)
                 .withValidator(
-                        isbn -> isbn.length() == 10 || isbn.length() == 13,
-                        "ISBN ma 13 cyfr (lub 10  - do 31 grudnia 2006)")
-                .withValidator(
-                        isbn -> isbn.matches("[0-9]+"),
+                        isbn -> isbn == null || isbn.isEmpty() || isbn.matches("[0-9]+"),
                         "ISBN składa się z samych cyfr")
+                .withValidator(
+                        isbn -> isbn == null || isbn.isEmpty() || isbn.length() == 10 || isbn.length() == 13,
+                        "ISBN ma 13 lub 10 cyfr")
                 .bind(Book::getIsbn, Book::setIsbn);
 
         add(libraryBookId, title, author, publisher, publicationYear, category, isbn, createButtonLayout());

@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.library.data.entity;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
+import com.github.mateuszmazewski.library.data.Messages;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,17 +12,17 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class User extends AbstractEntity {
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     @Column(unique = true)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String password;
 
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     private boolean active;
 
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     @OneToOne
     private Employee employee;
 

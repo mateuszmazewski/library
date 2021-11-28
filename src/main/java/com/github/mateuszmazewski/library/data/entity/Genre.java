@@ -1,13 +1,14 @@
 package com.github.mateuszmazewski.library.data.entity;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
+import com.github.mateuszmazewski.library.data.Messages;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Genre extends AbstractEntity {
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String name;
 
     public Genre() {

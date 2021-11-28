@@ -175,6 +175,10 @@ public class DataService {
         }
     }
 
+    public List<Book> findBookByLibraryBookId(String filterLibraryBookId) {
+        return bookRepository.searchByLibraryBookId(filterLibraryBookId);
+    }
+
     public long countBooks() {
         return bookRepository.count();
     }

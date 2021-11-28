@@ -26,4 +26,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
                       @Param("searchGenreId") Integer searchGenreId,
                       @Param("searchCategoryId") Integer searchCategoryId,
                       @Param("searchIsbn") String searchIsbn);
+
+    @Query("select b from Book b " +
+            "where lower(b.libraryBookId) like lower(concat('%', :searchLibraryBookId, '%')) ")
+    List<Book> searchByLibraryBookId(@Param("searchLibraryBookId") String searchLibraryBookId);
 }

@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.library.data.entity;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
+import com.github.mateuszmazewski.library.data.Messages;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.Email;
@@ -10,26 +11,26 @@ import java.time.LocalDate;
 
 @Entity
 public class Employee extends AbstractEntity {
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String surname;
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String position;
 
     @Email
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String phoneNumber;
 
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     private LocalDate birthdate;
 
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     private LocalDate employedSinceDate;
 
     private LocalDate employedToDate;

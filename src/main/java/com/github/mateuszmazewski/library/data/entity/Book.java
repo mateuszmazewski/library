@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.library.data.entity;
 
 import com.github.mateuszmazewski.library.data.AbstractEntity;
+import com.github.mateuszmazewski.library.data.Messages;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,19 +11,19 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Book extends AbstractEntity {
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     @Column(unique = true)
     private String libraryBookId;
 
-    @NotBlank
+    @NotBlank(message = Messages.NOT_EMPTY)
     private String title;
 
     @ManyToOne
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     private Author author;
 
     @ManyToOne
-    @NotNull
+    @NotNull(message = Messages.NOT_EMPTY)
     private Category category;
 
     @ManyToOne

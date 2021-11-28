@@ -94,7 +94,8 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
         form = new BookForm(service.findAuthors(null, null),
                 service.findPublishers(null),
-                service.findCategories(null, genreId));
+                service.findCategories(null, genreId),
+                service);
         form.setWidth("25em");
 
         form.addListener(BookForm.SaveEvent.class, this::saveBook);
