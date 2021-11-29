@@ -6,85 +6,60 @@ import com.github.mateuszmazewski.library.data.Messages;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Book extends AbstractEntity {
+
     @NotBlank(message = Messages.NOT_EMPTY)
     @Column(unique = true)
-    private String libraryBookId;
-
-    @NotBlank(message = Messages.NOT_EMPTY)
-    private String title;
+    private String bookCode;
 
     @ManyToOne
     @NotNull(message = Messages.NOT_EMPTY)
-    private Author author;
+    private BookDefinition bookDefinition;
 
-    @ManyToOne
-    @NotNull(message = Messages.NOT_EMPTY)
-    private Category category;
+    @OneToOne
+    private Borrow borrow;
 
-    @ManyToOne
-    private Publisher publisher;
+    private String notes;
 
-    private String isbn;
-    private Integer publicationYear;
-
-    public String getLibraryBookId() {
-        return libraryBookId;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
-    public void setLibraryBookId(String libraryBookId) {
-        this.libraryBookId = libraryBookId;
+    public String getBookCode() {
+        return bookCode;
     }
 
-    public String getTitle() {
-        return title;
+    public void setBookCode(String bookCode) {
+        this.bookCode = bookCode;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public BookDefinition getBookDefinition() {
+        return bookDefinition;
     }
 
-    public Author getAuthor() {
-        return author;
+    public void setBookDefinition(BookDefinition bookDefinition) {
+        this.bookDefinition = bookDefinition;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public String getNotes() {
+        return notes;
     }
 
-    public Category getCategory() {
-        return category;
+    public Borrow getBorrow() {
+        return borrow;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setBorrow(Borrow borrow) {
+        this.borrow = borrow;
     }
 
-    public Publisher getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(Publisher publisher) {
-        this.publisher = publisher;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public Integer getPublicationYear() {
-        return publicationYear;
-    }
-
-    public void setPublicationYear(Integer publicationYear) {
-        this.publicationYear = publicationYear;
+    @Override
+    public String toString() {
+        return "[" + bookCode + "] " + bookDefinition.getTitle();
     }
 }

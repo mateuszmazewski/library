@@ -10,24 +10,19 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query("select b from Book b " +
-            "where lower(b.libraryBookId) like lower(concat('%', :searchLibraryBookId, '%')) " +
-            "and lower(b.title) like lower(concat('%', :searchTitle, '%')) " +
-            "and (:searchAuthorId is null or b.author.id=:searchAuthorId) " +
-            "and (:searchPublisherId is null or b.publisher.id=:searchPublisherId) " +
-            "and (:searchPublicationYear is null or b.publicationYear=:searchPublicationYear) " +
-            "and (:searchGenreId is null or b.category.genre.id=:searchGenreId) " +
-            "and (:searchCategoryId is null or b.category.id=:searchCategoryId) " +
-            "and lower(b.isbn) like lower(concat('%', :searchIsbn, '%')) ")
-    List<Book> search(@Param("searchLibraryBookId") String searchLibraryBookId,
-                      @Param("searchTitle") String searchTitle,
-                      @Param("searchAuthorId") Integer searchAuthorId,
-                      @Param("searchPublisherId") Integer searchPublisherId,
-                      @Param("searchPublicationYear") Integer searchPublicationYear,
-                      @Param("searchGenreId") Integer searchGenreId,
-                      @Param("searchCategoryId") Integer searchCategoryId,
-                      @Param("searchIsbn") String searchIsbn);
+            "where (:searchIsBorrowed is null or (:searchIsBorrowed=true and b.borrow is not null) or (:searchIsBorrowed=false and b.borrow is null))" +
+            "and lower(b.bookCode) like lower(concat('%', :searchBookCode, '%')) " +
+            "and (:searchBookDefinitionId is null or b.bookDefinition.id=:searchBookDefinitionId)")
+    List<Book> search(@Param("searchIsBorrowed") Boolean searchIsBorrowed,
+                      @Param("searchBookCode") String searchBookCode,
+                      @Param("searchBookDefinitionId") Integer searchBookDefinitionId);
 
     @Query("select b from Book b " +
-            "where lower(b.libraryBookId) like lower(concat('%', :searchLibraryBookId, '%')) ")
-    List<Book> searchByLibraryBookId(@Param("searchLibraryBookId") String searchLibraryBookId);
+            "where lower(b.bookCode) like lower(concat('%', :searchBookCode, '%')) ")
+    List<Book> searchByBookCode(@Param("searchBookCode") String searchBookCode);
+
+    @Query("select b from Book b " +
+            "where b.borrow is null")
+    List<Book> searchOnlyNotBorrowed();
+
 }

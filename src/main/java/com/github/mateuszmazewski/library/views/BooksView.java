@@ -1,6 +1,7 @@
 package com.github.mateuszmazewski.library.views;
 
-import com.github.mateuszmazewski.library.data.entity.*;
+import com.github.mateuszmazewski.library.data.entity.Book;
+import com.github.mateuszmazewski.library.data.entity.BookDefinition;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.github.mateuszmazewski.library.views.forms.BookForm;
 import com.vaadin.flow.component.Component;
@@ -10,7 +11,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -19,23 +19,20 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
 
 @PageTitle("Książki | Biblioteka")
 @Route(value = "books", layout = MainLayout.class)
 public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Book> grid = new Grid<>(Book.class);
-    TextField filterLibraryBookId = new TextField("Identyfikator");
-    TextField filterTitle = new TextField("Tytuł");
-    ComboBox<Author> filterAuthor = new ComboBox<>("Autor");
-    ComboBox<Publisher> filterPublisher = new ComboBox<>("Wydawnictwo");
-    IntegerField filterPublicationYear = new IntegerField("Rok wydania");
-    ComboBox<Genre> filterGenre = new ComboBox<>("Rodzaj literacki");
-    ComboBox<Category> filterCategory = new ComboBox<>("Gatunek literacki");
-    TextField filterIsbn = new TextField("ISBN");
+    TextField filterBookCode = new TextField("Kod książki");
+    ComboBox<BookDefinition> filterBookDefinition = new ComboBox<>("Definicja książki");
+    ComboBox<String> filterBorrowStatus = new ComboBox<>("Status wypoż.");
     BookForm form;
     private final DataService service;
     private final HttpServletRequest req;
+    public final static String ALL_BOOKS = "Wszystkie";
+    public final static String BORROWED_BOOKS = "Wypożyczone";
+    public final static String NOT_BORROWED_BOOKS = "Niewypożyczone";
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -64,20 +61,23 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void updateList() {
-        Integer authorId = filterAuthor.getValue() != null ? filterAuthor.getValue().getId() : null;
-        Integer publisherId = filterPublisher.getValue() != null ? filterPublisher.getValue().getId() : null;
-        Integer publicationYear = filterPublicationYear.getValue();
-        Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
-        Integer categoryId = filterCategory.getValue() != null ? filterCategory.getValue().getId() : null;
-        grid.setItems(service.findBooks(
-                filterLibraryBookId.getValue(),
-                filterTitle.getValue(),
-                authorId,
-                publisherId,
-                publicationYear,
-                genreId,
-                categoryId,
-                filterIsbn.getValue()));
+        Boolean searchIsBorrowed = null;
+
+        if (filterBorrowStatus.getValue() != null) {
+            switch (filterBorrowStatus.getValue()) {
+                case BORROWED_BOOKS: {
+                    searchIsBorrowed = true;
+                    break;
+                }
+                case NOT_BORROWED_BOOKS: {
+                    searchIsBorrowed = false;
+                    break;
+                }
+            }
+        }
+
+        Integer filterBookDefinitionId = filterBookDefinition.getValue() != null ? filterBookDefinition.getValue().getId() : null;
+        grid.setItems(service.findBooks(searchIsBorrowed, filterBookCode.getValue(), filterBookDefinitionId));
     }
 
     private Component getContent() {
@@ -91,10 +91,8 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void configureForm() {
-        Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
-        form = new BookForm(service.findAuthors(null, null),
-                service.findPublishers(null),
-                service.findCategories(null, genreId),
+        form = new BookForm(service.findBookDefinitions(null, null, null, null,
+                null, null, null),
                 service);
         form.setWidth("25em");
 
@@ -116,43 +114,18 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private Component getToolbar() {
-        filterLibraryBookId.setClearButtonVisible(true);
-        filterLibraryBookId.addValueChangeListener(e -> updateList());
-        filterLibraryBookId.setValueChangeMode(ValueChangeMode.LAZY);
+        filterBorrowStatus.setItems(ALL_BOOKS, BORROWED_BOOKS, NOT_BORROWED_BOOKS);
+        filterBorrowStatus.setValue(ALL_BOOKS);
+        filterBorrowStatus.addValueChangeListener(e -> updateList());
 
-        filterTitle.setClearButtonVisible(true);
-        filterTitle.setValueChangeMode(ValueChangeMode.LAZY);
-        filterTitle.addValueChangeListener(e -> updateList());
+        filterBookCode.setClearButtonVisible(true);
+        filterBookCode.setValueChangeMode(ValueChangeMode.LAZY);
+        filterBookCode.addValueChangeListener(e -> updateList());
 
-        filterAuthor.setItems(service.findAuthors(null, null));
-        filterAuthor.setItemLabelGenerator(Author::toString);
-        filterAuthor.setClearButtonVisible(true);
-        filterAuthor.addValueChangeListener(e -> updateList());
-
-        filterPublisher.setItems(service.findPublishers(null));
-        filterPublisher.setItemLabelGenerator(Publisher::getName);
-        filterPublisher.setClearButtonVisible(true);
-        filterPublisher.addValueChangeListener(e -> updateList());
-
-        filterPublicationYear.addValueChangeListener(e -> updateList());
-        filterPublicationYear.setValueChangeMode(ValueChangeMode.LAZY);
-        filterPublicationYear.setMin(1000);
-        filterPublicationYear.setMax(Calendar.getInstance().get(Calendar.YEAR));
-
-        filterGenre.setItems(service.findGenres(null));
-        filterGenre.setItemLabelGenerator(Genre::getName);
-        filterGenre.setClearButtonVisible(true);
-        filterGenre.addValueChangeListener(e -> updateList());
-
-        Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
-        filterCategory.setItems(service.findCategories(null, genreId));
-        filterCategory.setItemLabelGenerator(Category::getName);
-        filterCategory.setClearButtonVisible(true);
-        filterCategory.addValueChangeListener(e -> updateList());
-
-        filterIsbn.setClearButtonVisible(true);
-        filterIsbn.addValueChangeListener(e -> updateList());
-        filterIsbn.setValueChangeMode(ValueChangeMode.LAZY);
+        filterBookDefinition.setItems(service.findBookDefinitions(null, null, null, null,
+                null, null, null));
+        filterBookDefinition.addValueChangeListener(e -> updateList());
+        filterBookDefinition.setClearButtonVisible(true);
 
         Button clearFiltersButton = new Button("Wyczyść filtry");
         clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -161,31 +134,16 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         Button addBookButton = new Button("Dodaj książkę");
         addBookButton.addClickListener(e -> addBook());
 
-        HorizontalLayout filters = new HorizontalLayout(
-                filterLibraryBookId,
-                filterTitle,
-                filterAuthor,
-                filterPublisher,
-                filterPublicationYear,
-                filterGenre,
-                filterCategory,
-                filterIsbn);
-        HorizontalLayout buttons = new HorizontalLayout(clearFiltersButton, addBookButton);
-        filters.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        buttons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        HorizontalLayout toolbar = new HorizontalLayout(filterBorrowStatus, filterBookCode, filterBookDefinition, clearFiltersButton, addBookButton);
+        toolbar.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
-        return new VerticalLayout(filters, buttons);
+        return toolbar;
     }
 
     private void clearFilters() {
-        filterLibraryBookId.clear();
-        filterTitle.clear();
-        filterAuthor.clear();
-        filterPublisher.clear();
-        filterPublicationYear.clear();
-        filterGenre.clear();
-        filterCategory.clear();
-        filterIsbn.clear();
+        filterBorrowStatus.setValue(ALL_BOOKS);
+        filterBookCode.clear();
+        filterBookDefinition.clear();
     }
 
     private void addBook() {
@@ -196,14 +154,10 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(Book::getLibraryBookId).setHeader("Identyfikator").setSortable(true);
-        grid.addColumn(Book::getTitle).setHeader("Tytuł").setSortable(true);
-        grid.addColumn(book -> book.getAuthor().toString()).setHeader("Autor").setSortable(true);
-        grid.addColumn(book -> book.getPublisher() != null ? book.getPublisher().getName() : "").setHeader("Wydawnictwo").setSortable(true);
-        grid.addColumn(book -> book.getPublicationYear() != null ? book.getPublicationYear().intValue() : "").setHeader("Rok wydania").setSortable(true);
-        grid.addColumn(book -> book.getCategory().getGenre().getName()).setHeader("Rodzaj literacki").setSortable(true);
-        grid.addColumn(book -> book.getCategory().getName()).setHeader("Gatunek literacki").setSortable(true);
-        grid.addColumn(Book::getIsbn).setHeader("ISBN").setSortable(true);
+        grid.addColumn(Book::getBookCode).setHeader("Kod książki").setSortable(true);
+        grid.addColumn(Book::getBookDefinition).setHeader("Definicja książki").setSortable(true);
+        grid.addColumn(book -> book.getBorrow() != null ? book.getBorrow().getId() : "").setHeader("ID wypoż.").setSortable(true);
+        grid.addColumn(Book::getNotes).setHeader("Uwagi").setSortable(false);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(e -> editBook(e.getValue()));

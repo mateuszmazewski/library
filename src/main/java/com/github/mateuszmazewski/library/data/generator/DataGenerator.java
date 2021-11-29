@@ -20,10 +20,11 @@ public class DataGenerator {
                                       CategoryRepository categoryRepository,
                                       GenreRepository genreRepository,
                                       PublisherRepository publisherRepository,
-                                      BookRepository bookRepository,
+                                      BookDefinitionRepository bookDefinitionRepository,
                                       ReaderRepository readerRepository,
                                       EmployeeRepository employeeRepository,
-                                      UserRepository userRepository) {
+                                      UserRepository userRepository,
+                                      BookRepository bookRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
@@ -185,10 +186,9 @@ public class DataGenerator {
             publisherRepository.save(supernova);
             publisherRepository.save(greg);
 
-            // ----- BOOKS -----
+            // ----- BOOK DEFINITIONS -----
 
-            Book witcher1 = new Book();
-            witcher1.setLibraryBookId("E-00001");
+            BookDefinition witcher1 = new BookDefinition();
             witcher1.setTitle("Wiedźmin. Tom 1. Ostatnie życzenie");
             witcher1.setAuthor(sapkowski);
             witcher1.setPublisher(supernova);
@@ -196,8 +196,7 @@ public class DataGenerator {
             witcher1.setCategory(novel);
             witcher1.setIsbn("9780316029186");
 
-            Book witcher2 = new Book();
-            witcher2.setLibraryBookId("E-00002");
+            BookDefinition witcher2 = new BookDefinition();
             witcher2.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
             witcher2.setAuthor(sapkowski);
             witcher2.setPublisher(supernova);
@@ -205,26 +204,7 @@ public class DataGenerator {
             witcher2.setCategory(novel);
             witcher2.setIsbn("9780316389709");
 
-            Book witcher3 = new Book();
-            witcher3.setLibraryBookId("E-00003");
-            witcher3.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
-            witcher3.setAuthor(sapkowski);
-            witcher3.setPublisher(supernova);
-            witcher3.setPublicationYear(2019);
-            witcher3.setCategory(novel);
-            witcher3.setIsbn("9780316389709");
-
-            Book witcher4 = new Book();
-            witcher4.setLibraryBookId("E-00004");
-            witcher4.setTitle("Miecz przeznaczenia. Wiedźmin. Tom 2");
-            witcher4.setAuthor(sapkowski);
-            witcher4.setPublisher(supernova);
-            witcher4.setPublicationYear(2019);
-            witcher4.setCategory(novel);
-            witcher4.setIsbn("9780316389709");
-
-            Book mrThaddeus = new Book();
-            mrThaddeus.setLibraryBookId("E-00005");
+            BookDefinition mrThaddeus = new BookDefinition();
             mrThaddeus.setTitle("Pan Tadeusz");
             mrThaddeus.setAuthor(mickiewicz);
             mrThaddeus.setPublisher(greg);
@@ -232,8 +212,7 @@ public class DataGenerator {
             mrThaddeus.setCategory(epos);
             mrThaddeus.setIsbn("9788373271920");
 
-            Book teutonicKnights = new Book();
-            teutonicKnights.setLibraryBookId("E-00006");
+            BookDefinition teutonicKnights = new BookDefinition();
             teutonicKnights.setTitle("Krzyżacy");
             teutonicKnights.setAuthor(sienkiewicz);
             teutonicKnights.setPublisher(wsip);
@@ -241,32 +220,56 @@ public class DataGenerator {
             teutonicKnights.setCategory(novel);
             teutonicKnights.setIsbn("9788373271821");
 
-            Book romeoAndJuliet1 = new Book();
-            romeoAndJuliet1.setLibraryBookId("D-00001");
-            romeoAndJuliet1.setTitle("Romeo i Julia");
-            romeoAndJuliet1.setAuthor(shakespeare);
-            romeoAndJuliet1.setPublisher(greg);
-            romeoAndJuliet1.setPublicationYear(2021);
-            romeoAndJuliet1.setCategory(tragedy);
-            romeoAndJuliet1.setIsbn("9788373270282");
+            BookDefinition romeoAndJuliet = new BookDefinition();
+            romeoAndJuliet.setTitle("Romeo i Julia");
+            romeoAndJuliet.setAuthor(shakespeare);
+            romeoAndJuliet.setPublisher(greg);
+            romeoAndJuliet.setPublicationYear(2021);
+            romeoAndJuliet.setCategory(tragedy);
+            romeoAndJuliet.setIsbn("9788373270282");
 
-            Book romeoAndJuliet2 = new Book();
-            romeoAndJuliet2.setLibraryBookId("D-00002");
-            romeoAndJuliet2.setTitle("Romeo i Julia");
-            romeoAndJuliet2.setAuthor(shakespeare);
-            romeoAndJuliet2.setPublisher(greg);
-            romeoAndJuliet2.setPublicationYear(2021);
-            romeoAndJuliet2.setCategory(tragedy);
-            romeoAndJuliet2.setIsbn("9788373270282");
 
-            bookRepository.save(witcher1);
-            bookRepository.save(witcher2);
-            bookRepository.save(witcher3);
-            bookRepository.save(witcher4);
-            bookRepository.save(mrThaddeus);
-            bookRepository.save(teutonicKnights);
-            bookRepository.save(romeoAndJuliet1);
-            bookRepository.save(romeoAndJuliet2);
+            bookDefinitionRepository.save(witcher1);
+            bookDefinitionRepository.save(witcher2);
+            bookDefinitionRepository.save(mrThaddeus);
+            bookDefinitionRepository.save(teutonicKnights);
+            bookDefinitionRepository.save(romeoAndJuliet);
+
+            // ----- BOOKS -----
+
+            Book b1 = new Book();
+            b1.setBookCode("E-00284");
+            b1.setBookDefinition(witcher1);
+            b1.setNotes("Porwana okładka na rogach");
+
+            Book b2 = new Book();
+            b2.setBookCode("E-00072");
+            b2.setBookDefinition(witcher1);
+            b2.setNotes("Jak nowa");
+
+            Book b3 = new Book();
+            b3.setBookCode("E-00121");
+            b3.setBookDefinition(teutonicKnights);
+            b3.setNotes("Porwana okładka na rogach");
+
+            Book b4 = new Book();
+            b4.setBookCode("E-00090");
+            b4.setBookDefinition(teutonicKnights);
+
+            Book b5 = new Book();
+            b5.setBookCode("D-00001");
+            b5.setBookDefinition(romeoAndJuliet);
+
+            Book b6 = new Book();
+            b6.setBookCode("E-00736");
+            b6.setBookDefinition(mrThaddeus);
+
+            bookRepository.save(b1);
+            bookRepository.save(b2);
+            bookRepository.save(b3);
+            bookRepository.save(b4);
+            bookRepository.save(b5);
+            bookRepository.save(b6);
 
             // ----- READERS -----
 

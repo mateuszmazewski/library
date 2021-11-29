@@ -13,27 +13,33 @@ public class DataService {
     private final CategoryRepository categoryRepository;
     private final GenreRepository genreRepository;
     private final PublisherRepository publisherRepository;
+    private final BookDefinitionRepository bookDefinitionRepository;
     private final BookRepository bookRepository;
     private final ReaderRepository readerRepository;
     private final EmployeeRepository employeeRepository;
     private final UserRepository userRepository;
+    private final BorrowRepository borrowRepository;
 
     public DataService(AuthorRepository authorRepository,
                        CategoryRepository categoryRepository,
                        GenreRepository genreRepository,
                        PublisherRepository publisherRepository,
+                       BookDefinitionRepository bookDefinitionRepository,
                        BookRepository bookRepository,
                        ReaderRepository readerRepository,
                        EmployeeRepository employeeRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       BorrowRepository borrowRepository) {
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
         this.genreRepository = genreRepository;
         this.publisherRepository = publisherRepository;
+        this.bookDefinitionRepository = bookDefinitionRepository;
         this.bookRepository = bookRepository;
         this.readerRepository = readerRepository;
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
+        this.borrowRepository = borrowRepository;
     }
 
     // ----- Authors -----
@@ -144,27 +150,25 @@ public class DataService {
         publisherRepository.save(publisher);
     }
 
-    // ----- Books -----
+    // ----- Book definitions -----
 
-    public List<Book> findBooks(String filterLibraryBookId,
-                                String filterTitle,
-                                Integer filterAuthorId,
-                                Integer filterPublisherId,
-                                Integer filterPublicationYear,
-                                Integer filterGenreId,
-                                Integer filterCategoryId,
-                                String filterIsbn) {
-        if ((filterLibraryBookId == null || filterLibraryBookId.isEmpty())
-                && (filterTitle == null || filterTitle.isEmpty())
+    public List<BookDefinition> findBookDefinitions(String filterTitle,
+                                                    Integer filterAuthorId,
+                                                    Integer filterPublisherId,
+                                                    Integer filterPublicationYear,
+                                                    Integer filterGenreId,
+                                                    Integer filterCategoryId,
+                                                    String filterIsbn) {
+        if ((filterTitle == null || filterTitle.isEmpty())
                 && filterAuthorId == null
                 && filterPublisherId == null
                 && filterGenreId == null
                 && filterCategoryId == null
                 && filterPublicationYear == null
                 && (filterIsbn == null || filterIsbn.isEmpty())) {
-            return bookRepository.findAll();
+            return bookDefinitionRepository.findAll();
         } else {
-            return bookRepository.search(filterLibraryBookId,
+            return bookDefinitionRepository.search(
                     filterTitle,
                     filterAuthorId,
                     filterPublisherId,
@@ -175,8 +179,39 @@ public class DataService {
         }
     }
 
-    public List<Book> findBookByLibraryBookId(String filterLibraryBookId) {
-        return bookRepository.searchByLibraryBookId(filterLibraryBookId);
+    public long countBookDefinitions() {
+        return bookDefinitionRepository.count();
+    }
+
+    public void deleteBookDefinition(BookDefinition bookDefinition) {
+        bookDefinitionRepository.delete(bookDefinition);
+    }
+
+    public void saveBookDefinition(BookDefinition bookDefinition) {
+        if (bookDefinition == null) {
+            System.err.println("BookDefinition is null");
+            return;
+        }
+
+        bookDefinitionRepository.save(bookDefinition);
+    }
+
+    // ----- Books -----
+
+    public List<Book> findBooks(Boolean filterIsBorrowed, String filterBookCode, Integer filterBookDefinitionId) {
+        if (filterIsBorrowed == null && (filterBookCode == null || filterBookCode.isEmpty()) && filterBookDefinitionId == null) {
+            return bookRepository.findAll();
+        } else {
+            return bookRepository.search(filterIsBorrowed, filterBookCode, filterBookDefinitionId);
+        }
+    }
+
+    public List<Book> findBookByBookCode(String filterBookCode) {
+        return bookRepository.searchByBookCode(filterBookCode);
+    }
+
+    public List<Book> findOnlyNotBorrowedBooks() {
+        return bookRepository.searchOnlyNotBorrowed();
     }
 
     public long countBooks() {
@@ -275,5 +310,39 @@ public class DataService {
         }
 
         userRepository.save(user);
+    }
+
+    // ----- Borrows -----
+
+    public List<Borrow> findBorrows(Boolean filterIsActive, Integer filterBorrowId, Integer filterReaderId, String filterBookCode, Integer filterBookDefinitionId,
+                                    Integer filterBorrowEmployeeId, Integer filterGiveBackEmployeeId) {
+        if (filterIsActive == null
+                && filterBorrowId == null
+                && filterReaderId == null
+                && (filterBookCode == null || filterBookCode.isEmpty())
+                && filterBookDefinitionId == null
+                && filterBorrowEmployeeId == null
+                && filterGiveBackEmployeeId == null) {
+            return borrowRepository.findAll();
+        } else {
+            return borrowRepository.search(filterIsActive, filterBorrowId, filterReaderId, filterBookCode, filterBookDefinitionId, filterBorrowEmployeeId, filterGiveBackEmployeeId);
+        }
+    }
+
+    public long countBorrows() {
+        return borrowRepository.count();
+    }
+
+    public void deleteBorrow(Borrow borrow) {
+        borrowRepository.delete(borrow);
+    }
+
+    public Borrow saveBorrow(Borrow borrow) {
+        if (borrow == null) {
+            System.err.println("Borrow is null");
+            return null;
+        }
+
+        return borrowRepository.save(borrow);
     }
 }

@@ -49,20 +49,33 @@ public class MainLayout extends AppLayout {
         RouterLink authorsView = new RouterLink("Autorzy", AuthorsView.class);
         RouterLink categoriesView = new RouterLink("Gatunki literackie", CategoriesView.class);
         RouterLink publishersView = new RouterLink("Wydawnictwa", PublishersView.class);
+        RouterLink bookDefinitionsView = new RouterLink("Definicje książek", BookDefinitionsView.class);
         RouterLink booksView = new RouterLink("Książki", BooksView.class);
         RouterLink readersView = new RouterLink("Czytelnicy", ReadersView.class);
         RouterLink employeesView = new RouterLink("Pracownicy", EmployeesView.class);
         RouterLink usersView = new RouterLink("Użytkownicy", UsersView.class);
+        RouterLink borrowsView = new RouterLink("Wypożyczenia", BorrowsView.class);
 
         authorsView.setHighlightCondition(HighlightConditions.sameLocation());
         categoriesView.setHighlightCondition(HighlightConditions.sameLocation());
         publishersView.setHighlightCondition(HighlightConditions.sameLocation());
+        bookDefinitionsView.setHighlightCondition(HighlightConditions.sameLocation());
         booksView.setHighlightCondition(HighlightConditions.sameLocation());
         readersView.setHighlightCondition(HighlightConditions.sameLocation());
         employeesView.setHighlightCondition(HighlightConditions.sameLocation());
         usersView.setHighlightCondition(HighlightConditions.sameLocation());
+        borrowsView.setHighlightCondition(HighlightConditions.sameLocation());
 
-        VerticalLayout viewsList = new VerticalLayout(authorsView, categoriesView, publishersView, booksView, readersView, employeesView, usersView);
+        VerticalLayout viewsList = new VerticalLayout(
+                authorsView,
+                categoriesView,
+                publishersView,
+                bookDefinitionsView,
+                booksView,
+                readersView,
+                employeesView,
+                usersView,
+                borrowsView);
         addToDrawer(viewsList);
     }
 }
