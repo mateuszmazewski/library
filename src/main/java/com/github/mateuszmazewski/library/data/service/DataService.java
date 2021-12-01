@@ -5,6 +5,7 @@ import com.github.mateuszmazewski.library.data.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DataService {
@@ -52,6 +53,10 @@ public class DataService {
         }
     }
 
+    public List<Author> findAllAuthors() {
+        return authorRepository.findAll();
+    }
+
     public long countAuthors() {
         return authorRepository.count();
     }
@@ -77,6 +82,10 @@ public class DataService {
         } else {
             return categoryRepository.search(filterName, filterGenreId);
         }
+    }
+
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
     }
 
     public long countCategories() {
@@ -106,6 +115,10 @@ public class DataService {
         }
     }
 
+    public List<Genre> findAllGenres() {
+        return genreRepository.findAll();
+    }
+
     public long countGenres() {
         return genreRepository.count();
     }
@@ -131,6 +144,10 @@ public class DataService {
         } else {
             return publisherRepository.search(filterName);
         }
+    }
+
+    public List<Publisher> findAllPublishers() {
+        return publisherRepository.findAll();
     }
 
     public long countPublishers() {
@@ -179,6 +196,10 @@ public class DataService {
         }
     }
 
+    public List<BookDefinition> findAllBookDefinitions() {
+        return bookDefinitionRepository.findAll();
+    }
+
     public long countBookDefinitions() {
         return bookDefinitionRepository.count();
     }
@@ -204,6 +225,10 @@ public class DataService {
         } else {
             return bookRepository.search(filterIsBorrowed, filterBookCode, filterBookDefinitionId);
         }
+    }
+
+    public List<Book> findAllBooks() {
+        return bookRepository.findAll();
     }
 
     public List<Book> findBookByBookCode(String filterBookCode) {
@@ -241,6 +266,10 @@ public class DataService {
         }
     }
 
+    public List<Reader> findAllReaders() {
+        return readerRepository.findAll();
+    }
+
     public long countReaders() {
         return readerRepository.count();
     }
@@ -268,6 +297,10 @@ public class DataService {
         }
     }
 
+    public List<Employee> findAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
     public long countEmployees() {
         return employeeRepository.count();
     }
@@ -293,6 +326,19 @@ public class DataService {
         } else {
             return userRepository.search(filterUsername, filterEmployeeId, filterIsActive);
         }
+    }
+
+    public User findUserByExactUsername(String filterUsername) {
+        if (filterUsername == null || filterUsername.isEmpty()) {
+            return null;
+        } else {
+            Optional<User> u = userRepository.findByUsername(filterUsername);
+            return u.orElse(null);
+        }
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
     public long countUsers() {
@@ -327,6 +373,10 @@ public class DataService {
         } else {
             return borrowRepository.search(filterIsActive, filterBorrowId, filterReaderId, filterBookCode, filterBookDefinitionId, filterBorrowEmployeeId, filterGiveBackEmployeeId);
         }
+    }
+
+    public List<Borrow> findAllBorrows() {
+        return borrowRepository.findAll();
     }
 
     public long countBorrows() {

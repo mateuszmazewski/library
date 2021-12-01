@@ -1,10 +1,8 @@
 package com.github.mateuszmazewski.library.views.forms;
 
-import com.github.mateuszmazewski.library.data.entity.Book;
-import com.github.mateuszmazewski.library.data.entity.Borrow;
-import com.github.mateuszmazewski.library.data.entity.Employee;
-import com.github.mateuszmazewski.library.data.entity.Reader;
+import com.github.mateuszmazewski.library.data.entity.*;
 import com.github.mateuszmazewski.library.data.service.DataService;
+import com.github.mateuszmazewski.library.security.SecurityService;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -38,8 +36,6 @@ public class BorrowForm extends EntityForm {
         borrowEmployee.setItemLabelGenerator(Employee::toString);
         giveBackEmployee.setItemLabelGenerator(Employee::toString);
 
-        //borrowEmployee.setValue(); TODO: actually logged-in employee
-
         giveBackDate.setClearButtonVisible(true);
         giveBackEmployee.setClearButtonVisible(true);
 
@@ -58,10 +54,27 @@ public class BorrowForm extends EntityForm {
     }
 
     public void refreshLists() {
-        reader.setItems(service.findReaders(null, null));
+        reader.setItems(service.findAllReaders());
         book.setItems(service.findOnlyNotBorrowedBooks());
-        borrowEmployee.setItems(service.findEmployees(null, null, null));
-        giveBackEmployee.setItems(service.findEmployees(null, null, null));
+        setEmployees();
+    }
+
+    private void setEmployees() {
+        String username = SecurityService.getAuthenticatedUserUsername();
+        User user = service.findUserByExactUsername(username);
+        Employee employee = user != null ? user.getEmployee() : null;
+
+        if (user != null) {
+            if (user.getRoles().contains("ROLE_ADMIN")) { // Admin can set any employee
+                borrowEmployee.setItems(service.findAllEmployees());
+                giveBackEmployee.setItems(service.findAllEmployees());
+            } else if (employee != null) { // Standard user can only set himself
+                borrowEmployee.setItems(employee);
+                borrowEmployee.setValue(employee);
+                giveBackEmployee.setItems(employee);
+                giveBackEmployee.setValue(employee);
+            }
+        }
     }
 
     private void validateAndSave() {
