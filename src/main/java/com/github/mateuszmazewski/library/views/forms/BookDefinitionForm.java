@@ -1,9 +1,7 @@
 package com.github.mateuszmazewski.library.views.forms;
 
-import com.github.mateuszmazewski.library.data.entity.Author;
-import com.github.mateuszmazewski.library.data.entity.BookDefinition;
-import com.github.mateuszmazewski.library.data.entity.Category;
-import com.github.mateuszmazewski.library.data.entity.Publisher;
+import com.github.mateuszmazewski.library.data.Messages;
+import com.github.mateuszmazewski.library.data.entity.*;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,6 +26,12 @@ public class BookDefinitionForm extends EntityForm {
     public BookDefinitionForm(List<Author> authors, List<Publisher> publishers, List<Category> categories) {
         super();
         binder.bindInstanceFields(this);
+
+        binder.forField(publicationYear)
+                .withValidator(
+                        publicationYear -> publicationYear >= 1000 && publicationYear <= Calendar.getInstance().get(Calendar.YEAR),
+                        Messages.PUBLICATION_YEAR_RANGE)
+                .bind(BookDefinition::getPublicationYear, BookDefinition::setPublicationYear);
 
         author.setItems(authors);
         author.setItemLabelGenerator(Author::toString);
