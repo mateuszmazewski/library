@@ -76,7 +76,7 @@ public class CategoriesView extends VerticalLayout implements BeforeEnterObserve
     }
 
     private void configureForm() {
-        form = new CategoryForm(service.findAllGenres());
+        form = new CategoryForm(service);
         form.setWidth("25em");
 
         form.addListener(AuthorForm.SaveEvent.class, this::saveCategory);
@@ -125,6 +125,7 @@ public class CategoriesView extends VerticalLayout implements BeforeEnterObserve
     }
 
     private void addCategory() {
+        form.refreshLists();
         grid.asSingleSelect().clear();
         editCategory(new Category());
     }
@@ -143,6 +144,7 @@ public class CategoriesView extends VerticalLayout implements BeforeEnterObserve
         if (category == null) {
             closeEditor();
         } else {
+            form.refreshLists();
             form.setCategory(category);
             form.setVisible(true);
             addClassName("editing");

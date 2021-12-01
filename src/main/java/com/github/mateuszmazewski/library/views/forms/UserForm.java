@@ -2,6 +2,7 @@ package com.github.mateuszmazewski.library.views.forms;
 
 import com.github.mateuszmazewski.library.data.entity.Employee;
 import com.github.mateuszmazewski.library.data.entity.User;
+import com.github.mateuszmazewski.library.data.service.DataService;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
@@ -16,11 +17,10 @@ import com.vaadin.flow.data.binder.ValidationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
-
 public class UserForm extends EntityForm {
     Binder<User> binder = new BeanValidationBinder<>(User.class);
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final DataService service;
 
     TextField username = new TextField("Nazwa użytkownika");
     PasswordField rawPassword = new PasswordField("Hasło");
@@ -30,13 +30,13 @@ public class UserForm extends EntityForm {
     TextField roles = new TextField(); // definition only for binder to bind properly
     private User user;
 
-    public UserForm(List<Employee> employees) {
+    public UserForm(DataService service) {
         super();
+        this.service = service;
         binder.bindInstanceFields(this);
 
         rawPassword.setHelperText("Jeśli użytkownik ma już ustawione hasło i nie chcesz go zmieniać, pozostaw to pole puste");
 
-        employee.setItems(employees);
         employee.setItemLabelGenerator(Employee::toString);
 
         rolesList.setItems("ROLE_USER", "ROLE_ADMIN");
@@ -46,6 +46,10 @@ public class UserForm extends EntityForm {
         saveButton.addClickListener(e -> validateAndSave());
         deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, user)));
         cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
+    }
+
+    public void refreshLists() {
+        employee.setItems(service.findAllEmployees());
     }
 
     public void setUser(User user) {

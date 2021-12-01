@@ -11,18 +11,18 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-import java.util.List;
-
 public class BookForm extends EntityForm {
     Binder<Book> binder = new BeanValidationBinder<>(Book.class);
+    private final DataService service;
 
     TextField bookCode = new TextField("Kod książki");
     ComboBox<BookDefinition> bookDefinition = new ComboBox<>("Definicja książki");
     TextArea notes = new TextArea("Uwagi");
     private Book book;
 
-    public BookForm(List<BookDefinition> bookDefinitions, DataService service) {
+    public BookForm(DataService service) {
         super();
+        this.service = service;
         binder.bindInstanceFields(this);
 
         binder.forField(bookCode)
@@ -34,13 +34,16 @@ public class BookForm extends EntityForm {
                         Messages.UNIQUE)
                 .bind(Book::getBookCode, Book::setBookCode);
 
-        bookDefinition.setItems(bookDefinitions);
         bookDefinition.setItemLabelGenerator(BookDefinition::toString);
 
         add(bookCode, bookDefinition, notes, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
         deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, book)));
         cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
+    }
+
+    public void refreshLists() {
+        bookDefinition.setItems(service.findAllBookDefinitions());
     }
 
     public void setBook(Book book) {

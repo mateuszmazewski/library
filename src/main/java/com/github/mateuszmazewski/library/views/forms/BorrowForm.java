@@ -30,7 +30,6 @@ public class BorrowForm extends EntityForm {
         this.service = service;
         binder.bindInstanceFields(this);
 
-        refreshLists();
         reader.setItemLabelGenerator(Reader::toString);
         book.setItemLabelGenerator(Book::toString);
         borrowEmployee.setItemLabelGenerator(Employee::toString);

@@ -89,10 +89,7 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
     }
 
     private void configureForm() {
-        Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
-        form = new BookDefinitionForm(service.findAllAuthors(),
-                service.findAllPublishers(),
-                service.findCategories(null, genreId));
+        form = new BookDefinitionForm(service);
         form.setWidth("25em");
 
         form.addListener(BookDefinitionForm.SaveEvent.class, this::saveBookDefinition);
@@ -180,6 +177,7 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
     }
 
     private void addBookDefinition() {
+        form.refreshLists();
         grid.asSingleSelect().clear();
         editBookDefinition(new BookDefinition());
     }
@@ -203,6 +201,7 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
         if (bookDefinition == null) {
             closeEditor();
         } else {
+            form.refreshLists();
             form.setBookDefinition(bookDefinition);
             form.setVisible(true);
             addClassName("editing");

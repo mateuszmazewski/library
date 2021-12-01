@@ -96,7 +96,7 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void configureForm() {
-        form = new UserForm(service.findAllEmployees());
+        form = new UserForm(service);
         form.setWidth("25em");
 
         form.addListener(UserForm.SaveEvent.class, this::saveUser);
@@ -150,6 +150,7 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void addUser() {
+        form.refreshLists();
         grid.asSingleSelect().clear();
         editUser(new User());
     }
@@ -179,6 +180,7 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
         if (user == null) {
             closeEditor();
         } else {
+            form.refreshLists();
             form.setUser(user);
             form.setVisible(true);
             addClassName("editing");

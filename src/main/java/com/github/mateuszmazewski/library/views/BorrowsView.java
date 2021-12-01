@@ -247,6 +247,7 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
         if (borrow == null) {
             closeEditor();
         } else {
+            form.refreshLists();
             form.setBorrow(borrow);
             form.setVisible(true);
             addClassName("editing");

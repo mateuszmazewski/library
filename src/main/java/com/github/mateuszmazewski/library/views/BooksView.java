@@ -91,7 +91,7 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void configureForm() {
-        form = new BookForm(service.findAllBookDefinitions(), service);
+        form = new BookForm(service);
         form.setWidth("25em");
 
         form.addListener(BookForm.SaveEvent.class, this::saveBook);
@@ -144,6 +144,7 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void addBook() {
+        form.refreshLists();
         grid.asSingleSelect().clear();
         editBook(new Book());
     }
@@ -164,6 +165,7 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         if (book == null) {
             closeEditor();
         } else {
+            form.refreshLists();
             form.setBook(book);
             form.setVisible(true);
             addClassName("editing");
