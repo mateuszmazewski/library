@@ -91,9 +91,7 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void configureForm() {
-        form = new BookForm(service.findBookDefinitions(null, null, null, null,
-                null, null, null),
-                service);
+        form = new BookForm(service.findAllBookDefinitions(), service);
         form.setWidth("25em");
 
         form.addListener(BookForm.SaveEvent.class, this::saveBook);
@@ -122,8 +120,7 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
         filterBookCode.setValueChangeMode(ValueChangeMode.LAZY);
         filterBookCode.addValueChangeListener(e -> updateList());
 
-        filterBookDefinition.setItems(service.findBookDefinitions(null, null, null, null,
-                null, null, null));
+        filterBookDefinition.setItems(service.findAllBookDefinitions());
         filterBookDefinition.addValueChangeListener(e -> updateList());
         filterBookDefinition.setClearButtonVisible(true);
 

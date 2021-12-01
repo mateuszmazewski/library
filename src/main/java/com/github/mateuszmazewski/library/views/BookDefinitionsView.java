@@ -90,8 +90,8 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
 
     private void configureForm() {
         Integer genreId = filterGenre.getValue() != null ? filterGenre.getValue().getId() : null;
-        form = new BookDefinitionForm(service.findAuthors(null, null),
-                service.findPublishers(null),
+        form = new BookDefinitionForm(service.findAllAuthors(),
+                service.findAllPublishers(),
                 service.findCategories(null, genreId));
         form.setWidth("25em");
 
@@ -117,12 +117,12 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
         filterTitle.setValueChangeMode(ValueChangeMode.LAZY);
         filterTitle.addValueChangeListener(e -> updateList());
 
-        filterAuthor.setItems(service.findAuthors(null, null));
+        filterAuthor.setItems(service.findAllAuthors());
         filterAuthor.setItemLabelGenerator(Author::toString);
         filterAuthor.setClearButtonVisible(true);
         filterAuthor.addValueChangeListener(e -> updateList());
 
-        filterPublisher.setItems(service.findPublishers(null));
+        filterPublisher.setItems(service.findAllPublishers());
         filterPublisher.setItemLabelGenerator(Publisher::getName);
         filterPublisher.setClearButtonVisible(true);
         filterPublisher.addValueChangeListener(e -> updateList());
@@ -132,7 +132,7 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
         filterPublicationYear.setMin(1000);
         filterPublicationYear.setMax(Calendar.getInstance().get(Calendar.YEAR));
 
-        filterGenre.setItems(service.findGenres(null));
+        filterGenre.setItems(service.findAllGenres());
         filterGenre.setItemLabelGenerator(Genre::getName);
         filterGenre.setClearButtonVisible(true);
         filterGenre.addValueChangeListener(e -> updateList());

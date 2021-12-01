@@ -96,7 +96,7 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void configureForm() {
-        form = new UserForm(service.findEmployees(null, null, null));
+        form = new UserForm(service.findAllEmployees());
         form.setWidth("25em");
 
         form.addListener(UserForm.SaveEvent.class, this::saveUser);
@@ -121,7 +121,7 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
         filterUsername.setValueChangeMode(ValueChangeMode.LAZY);
         filterUsername.addValueChangeListener(e -> updateList());
 
-        filterEmployee.setItems(service.findEmployees(null, null, null));
+        filterEmployee.setItems(service.findAllEmployees());
         filterEmployee.setItemLabelGenerator(Employee::toString);
         filterEmployee.setClearButtonVisible(true);
         filterEmployee.addValueChangeListener(e -> updateList());

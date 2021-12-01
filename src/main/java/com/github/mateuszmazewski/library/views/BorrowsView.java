@@ -161,7 +161,7 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
         filterId.setValueChangeMode(ValueChangeMode.LAZY);
         filterId.setClearButtonVisible(true);
 
-        filterReader.setItems(service.findReaders(null, null));
+        filterReader.setItems(service.findAllReaders());
         filterReader.setItemLabelGenerator(Reader::toString);
         filterReader.setClearButtonVisible(true);
         filterReader.addValueChangeListener(e -> updateList());
@@ -170,13 +170,12 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
         filterBookCode.addValueChangeListener(e -> updateList());
         filterBookCode.setValueChangeMode(ValueChangeMode.LAZY);
 
-        filterBookDefinition.setItems(service.findBookDefinitions(null, null, null, null,
-                null, null, null));
+        filterBookDefinition.setItems(service.findAllBookDefinitions());
         filterBookDefinition.setItemLabelGenerator(BookDefinition::toString);
         filterBookDefinition.setClearButtonVisible(true);
         filterBookDefinition.addValueChangeListener(e -> updateList());
 
-        List<Employee> employees = service.findEmployees(null, null, null);
+        List<Employee> employees = service.findAllEmployees();
 
         filterBorrowEmployee.setItems(employees);
         filterBorrowEmployee.setItemLabelGenerator(Employee::toString);

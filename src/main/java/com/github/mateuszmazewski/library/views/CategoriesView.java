@@ -76,7 +76,7 @@ public class CategoriesView extends VerticalLayout implements BeforeEnterObserve
     }
 
     private void configureForm() {
-        form = new CategoryForm(service.findGenres(null));
+        form = new CategoryForm(service.findAllGenres());
         form.setWidth("25em");
 
         form.addListener(AuthorForm.SaveEvent.class, this::saveCategory);
@@ -101,7 +101,7 @@ public class CategoriesView extends VerticalLayout implements BeforeEnterObserve
         filterName.setValueChangeMode(ValueChangeMode.LAZY);
         filterName.addValueChangeListener(e -> updateList());
 
-        filterGenre.setItems(service.findGenres(null));
+        filterGenre.setItems(service.findAllGenres());
         filterGenre.setItemLabelGenerator(Genre::getName);
         filterGenre.setClearButtonVisible(true);
         filterGenre.addValueChangeListener(e -> updateList());
