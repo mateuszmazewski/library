@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.library.views;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.Book;
 import com.github.mateuszmazewski.library.data.entity.BookDefinition;
 import com.github.mateuszmazewski.library.data.service.DataService;
@@ -9,6 +10,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,6 +20,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -106,9 +110,13 @@ public class BooksView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void deleteBook(BookForm.DeleteEvent event) {
-        service.deleteBook((Book) event.getEntity());
-        updateList();
-        closeEditor();
+        try {
+            service.deleteBook((Book) event.getEntity());
+            updateList();
+            closeEditor();
+        } catch (DataIntegrityViolationException e) {
+            Notification.show(Messages.INTEGRITY_BOOK).addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
     private Component getToolbar() {

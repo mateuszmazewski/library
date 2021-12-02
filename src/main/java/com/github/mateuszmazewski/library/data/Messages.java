@@ -8,4 +8,13 @@ public class Messages {
 
     public static final String BOOK_ALREADY_BORROWED = "Ta książka jest aktualnie wypożyczona";
     public static final String PUBLICATION_YEAR_RANGE = "Musi być między 1000 a " + Calendar.getInstance().get(Calendar.YEAR);
+
+    public static final String INTEGRITY_AUTHOR = "Nie można usunąć autora, który posiada przypisania do definicji książek.";
+    public static final String INTEGRITY_BOOK_DEFINITION = "Nie można usunąć definicji książki, która posiada przypisania do książek.";
+    public static final String INTEGRITY_BOOK = "Nie można usunąć książki, która posiada przypisania do wypożyczeń.";
+    public static final String INTEGRITY_BORROW = "Nie można usunąć aktywnego wypożyczenia.";
+    public static final String INTEGRITY_CATEGORY = "Nie można usunąć gatunku, który posiada przypisania do definicji książek.";
+    public static final String INTEGRITY_EMPLOYEE = "Nie można usunąć pracownika, który posiada przypisania do użytkowników lub wypożyczeń.";
+    public static final String INTEGRITY_PUBLISHER = "Nie można usunąć wydawnictwa, które posiada przypisania do definicji książek.";
+    public static final String INTEGRITY_READER = "Nie można usunąć czytelnika, który posiada przypisania do wypożyczeń.";
 }

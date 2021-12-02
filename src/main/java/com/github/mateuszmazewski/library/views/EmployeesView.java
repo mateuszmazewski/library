@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.library.views;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.Employee;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.github.mateuszmazewski.library.views.forms.EmployeeForm;
@@ -7,6 +8,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -15,6 +18,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -85,9 +89,13 @@ public class EmployeesView extends VerticalLayout implements BeforeEnterObserver
     }
 
     private void deleteEmployee(EmployeeForm.DeleteEvent event) {
-        service.deleteEmployee((Employee) event.getEntity());
-        updateList();
-        closeEditor();
+        try {
+            service.deleteEmployee((Employee) event.getEntity());
+            updateList();
+            closeEditor();
+        } catch (DataIntegrityViolationException e) {
+            Notification.show(Messages.INTEGRITY_EMPLOYEE).addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
     private Component getToolbar() {

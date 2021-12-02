@@ -20,6 +20,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -147,9 +148,13 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void deleteBorrow(BorrowForm.DeleteEvent event) {
-        service.deleteBorrow((Borrow) event.getEntity());
-        updateList();
-        closeEditor();
+        try {
+            service.deleteBorrow((Borrow) event.getEntity());
+            updateList();
+            closeEditor();
+        } catch (DataIntegrityViolationException e) {
+            Notification.show(Messages.INTEGRITY_BORROW).addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
     private Component getToolbar() {
