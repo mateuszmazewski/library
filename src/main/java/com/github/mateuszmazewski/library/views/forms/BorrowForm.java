@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.library.views.forms;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.*;
 import com.github.mateuszmazewski.library.data.service.DataService;
 import com.github.mateuszmazewski.library.security.SecurityService;
@@ -40,11 +41,32 @@ public class BorrowForm extends EntityForm {
 
         borrowDate.setLabel("Data wypożyczenia");
         giveBackDate.setLabel("Data zwrotu");
+        giveBackDate.addValueChangeListener(e -> checkGiveBackEmployee());
 
-        add(reader, book, borrowDate, giveBackDate, borrowEmployee, giveBackEmployee, notes, createButtonLayout());
+        binder.forField(giveBackEmployee)
+                .withValidator(
+                        giveBackEmployee -> giveBackDate.getValue() == null && giveBackEmployee == null
+                                || (giveBackDate.getValue() != null && giveBackEmployee != null),
+                        Messages.NOT_EMPTY_GIVE_BACK_EMPLOYEE)
+                .bind(Borrow::getGiveBackEmployee, Borrow::setGiveBackEmployee);
+
+        checkGiveBackEmployee();
+
+        add(reader, book, borrowDate, borrowEmployee, giveBackDate, giveBackEmployee, notes, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
         deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, borrow)));
         cancelButton.addClickListener(e -> fireEvent(new CloseEvent(this)));
+    }
+
+    private void checkGiveBackEmployee() {
+        if (giveBackDate.getValue() == null) {
+            giveBackEmployee.setErrorMessage(null);
+            giveBackEmployee.setInvalid(false);
+            giveBackEmployee.clear();
+            giveBackEmployee.setEnabled(false);
+        } else {
+            giveBackEmployee.setEnabled(true);
+        }
     }
 
     public void setBorrow(Borrow borrow) {
