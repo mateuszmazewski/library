@@ -134,10 +134,11 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
 
         // Update borrow in borrowed book
         Book book = borrow.getBook();
-        if (borrow.getBook().getBorrow() == null) { // If book is not borrowed
+        if (borrow.getBook().getBorrow() == null // If book is not borrowed
+                && borrow.getGiveBackDate() == null) {
             book.setBorrow(borrow); // Book is now being borrowed
             service.saveBook(book);
-        } else if (borrow.getBook().getBorrow().equals(borrow) // User is editing existing borrow
+        } else if (borrow.getBook().getBorrow() != null && borrow.getBook().getBorrow().equals(borrow) // User is editing existing borrow
                 && borrow.getGiveBackDate() != null) { // and user specified giveBackDate == took back the book
             book.setBorrow(null); // The book is no longer borrowed
             service.saveBook(book);
