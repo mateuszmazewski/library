@@ -23,7 +23,7 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H3 logo = new H3("Zarządzanie biblioteką");
-        String username = securityService.getAuthenticatedUserUsername();
+        String username = SecurityService.getAuthenticatedUserUsername();
         H5 loggedInUser;
 
         logo.addClassNames("text-l", "m-s"); //margin-small
