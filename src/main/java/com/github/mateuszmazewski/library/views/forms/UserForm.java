@@ -1,5 +1,6 @@
 package com.github.mateuszmazewski.library.views.forms;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.Employee;
 import com.github.mateuszmazewski.library.data.entity.User;
 import com.github.mateuszmazewski.library.data.service.DataService;
@@ -41,6 +42,17 @@ public class UserForm extends EntityForm {
 
         rolesList.setItems("ROLE_USER", "ROLE_ADMIN");
         Label rolesLabel = new Label("Role użytkownika");
+
+        binder.forField(username)
+                .withValidator(
+                        username -> username != null && !username.isEmpty(),
+                        Messages.NOT_EMPTY)
+                .withValidator(
+                        username -> service.findUserByExactUsername(username) == null || user.getUsername().equals(username),
+                        Messages.UNIQUE)
+                .bind(User::getUsername, User::setUsername);
+
+        //TODO - add validator for password
 
         add(username, rawPassword, employee, active, rolesLabel, rolesList, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
