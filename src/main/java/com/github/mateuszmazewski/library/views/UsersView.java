@@ -1,8 +1,10 @@
 package com.github.mateuszmazewski.library.views;
 
+import com.github.mateuszmazewski.library.data.Messages;
 import com.github.mateuszmazewski.library.data.entity.Employee;
 import com.github.mateuszmazewski.library.data.entity.User;
 import com.github.mateuszmazewski.library.data.service.DataService;
+import com.github.mateuszmazewski.library.security.SecurityService;
 import com.github.mateuszmazewski.library.views.forms.UserForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +12,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -105,13 +109,24 @@ public class UsersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void saveUser(UserForm.SaveEvent event) {
-        service.saveUser((User) event.getEntity());
+        User userToSave = (User) event.getEntity();
+        if (userToSave.getUsername().equals(SecurityService.getAuthenticatedUserUsername())
+                && !userToSave.isActive()) {
+            Notification.show(Messages.CANNOT_DEACTIVATE_LOGGED_IN_USER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+        service.saveUser(userToSave);
         updateList();
         closeEditor();
     }
 
     private void deleteUser(UserForm.DeleteEvent event) {
-        service.deleteUser((User) event.getEntity());
+        User userToDelete = (User) event.getEntity();
+        if (userToDelete.getUsername().equals(SecurityService.getAuthenticatedUserUsername())) {
+            Notification.show(Messages.CANNOT_DELETE_LOGGED_IN_USER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+        service.deleteUser(userToDelete);
         updateList();
         closeEditor();
     }
