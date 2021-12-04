@@ -199,19 +199,25 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
         Button addBorrowButton = new Button("Dodaj wypożyczenie");
         addBorrowButton.addClickListener(e -> addBorrow());
 
-        HorizontalLayout filters = new HorizontalLayout(
+        HorizontalLayout filters1 = new HorizontalLayout(
                 filterBorrowStatus,
                 filterId,
                 filterReader,
                 filterBookCode,
-                filterBookDefinition,
+                filterBookDefinition
+        );
+        HorizontalLayout filters2AndButtons = new HorizontalLayout(
                 filterBorrowEmployee,
-                filterGiveBackEmployee);
-        HorizontalLayout buttons = new HorizontalLayout(clearFiltersButton, addBorrowButton);
-        filters.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        buttons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+                filterGiveBackEmployee,
+                clearFiltersButton,
+                addBorrowButton
+        );
+        filters1.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        filters2AndButtons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        VerticalLayout toolbar = new VerticalLayout(filters1, filters2AndButtons);
+        toolbar.setSpacing(false);
 
-        return new VerticalLayout(filters, buttons);
+        return toolbar;
     }
 
     private void clearFilters() {

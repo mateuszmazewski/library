@@ -159,19 +159,23 @@ public class BookDefinitionsView extends VerticalLayout implements BeforeEnterOb
         Button addBookDefinitionButton = new Button("Dodaj definicję książki");
         addBookDefinitionButton.addClickListener(e -> addBookDefinition());
 
-        HorizontalLayout filters = new HorizontalLayout(
+        HorizontalLayout filters1 = new HorizontalLayout(
                 filterTitle,
                 filterAuthor,
                 filterPublisher,
                 filterPublicationYear,
-                filterGenre,
+                filterGenre
+        );
+        HorizontalLayout filters2AndButtons = new HorizontalLayout(
                 filterCategory,
-                filterIsbn);
-        HorizontalLayout buttons = new HorizontalLayout(clearFiltersButton, addBookDefinitionButton);
-        filters.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        buttons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-
-        return new VerticalLayout(filters, buttons);
+                filterIsbn,
+                clearFiltersButton,
+                addBookDefinitionButton);
+        filters1.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        filters2AndButtons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        VerticalLayout toolbar = new VerticalLayout(filters1, filters2AndButtons);
+        toolbar.setSpacing(false);
+        return toolbar;
     }
 
     private void clearFilters() {
