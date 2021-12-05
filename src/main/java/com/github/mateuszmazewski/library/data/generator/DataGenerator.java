@@ -305,7 +305,7 @@ public class DataGenerator {
             borrow1.setBook(book1);
             borrow1.setBorrowDate(LocalDate.of(2021, 10, 27));
             borrow1.setBorrowEmployee(librarian1);
-            borrow1.setGiveBackDate(LocalDate.of(2021, 11, 20));
+            borrow1.setGiveBackDate(LocalDate.of(2021, 11, 10));
             borrow1.setGiveBackEmployee(librarian1);
             borrow1.setReader(ostrowski);
 
@@ -331,9 +331,9 @@ public class DataGenerator {
 
             Borrow borrow5 = new Borrow();
             borrow5.setBook(book3);
-            borrow5.setBorrowDate(LocalDate.of(2021, 11, 8));
+            borrow5.setBorrowDate(LocalDate.of(2021, 11, 23));
             borrow5.setBorrowEmployee(librarian2);
-            borrow5.setGiveBackDate(LocalDate.of(2021, 11, 17));
+            borrow5.setGiveBackDate(LocalDate.of(2021, 11, 30));
             borrow5.setGiveBackEmployee(boss);
             borrow5.setReader(ostrowski);
 
