@@ -69,7 +69,7 @@ public class Reader extends AbstractEntity {
 
     @Override
     public String toString() {
-        return name + " " + surname;
+        return "[" + getId() + "] " + name + " " + surname;
     }
 
 }

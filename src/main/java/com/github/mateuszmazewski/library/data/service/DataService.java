@@ -258,11 +258,11 @@ public class DataService {
 
     // ----- Readers -----
 
-    public List<Reader> findReaders(String filterName, String filterSurname) {
-        if ((filterName == null || filterName.isEmpty()) && (filterSurname == null || filterSurname.isEmpty())) {
+    public List<Reader> findReaders(Integer filterId, String filterName, String filterSurname) {
+        if (filterId == null && (filterName == null || filterName.isEmpty()) && (filterSurname == null || filterSurname.isEmpty())) {
             return readerRepository.findAll();
         } else {
-            return readerRepository.search(filterName, filterSurname);
+            return readerRepository.search(filterId, filterName, filterSurname);
         }
     }
 

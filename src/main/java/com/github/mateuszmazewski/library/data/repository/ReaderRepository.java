@@ -10,7 +10,10 @@ import java.util.List;
 public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     @Query("select r from Reader r " +
-            "where lower(r.name) like lower(concat('%', :searchName, '%')) " +
+            "where (:searchId is null or r.id=:searchId) " +
+            "and lower(r.name) like lower(concat('%', :searchName, '%')) " +
             "and lower(r.surname) like lower(concat('%', :searchSurname, '%'))")
-    List<Reader> search(@Param("searchName") String searchName, @Param("searchSurname") String searchSurname);
+    List<Reader> search(@Param("searchId") Integer searchId,
+                        @Param("searchName") String searchName,
+                        @Param("searchSurname") String searchSurname);
 }

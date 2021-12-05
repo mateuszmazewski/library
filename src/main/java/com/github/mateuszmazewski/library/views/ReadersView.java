@@ -12,6 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Route(value = "readers", layout = MainLayout.class)
 public class ReadersView extends VerticalLayout implements BeforeEnterObserver {
     Grid<Reader> grid = new Grid<>(Reader.class);
+    IntegerField filterId = new IntegerField("ID czytelnika");
     TextField filterName = new TextField("Imię");
     TextField filterSurname = new TextField("Nazwisko");
     ReaderForm form;
@@ -59,7 +61,7 @@ public class ReadersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private void updateList() {
-        grid.setItems(service.findReaders(filterName.getValue(), filterSurname.getValue()));
+        grid.setItems(service.findReaders(filterId.getValue(), filterName.getValue(), filterSurname.getValue()));
     }
 
     private Component getContent() {
@@ -98,6 +100,10 @@ public class ReadersView extends VerticalLayout implements BeforeEnterObserver {
     }
 
     private Component getToolbar() {
+        filterId.addValueChangeListener(e -> updateList());
+        filterId.setValueChangeMode(ValueChangeMode.LAZY);
+        filterId.setClearButtonVisible(true);
+
         filterName.setClearButtonVisible(true);
         filterName.setValueChangeMode(ValueChangeMode.LAZY);
         filterName.addValueChangeListener(e -> updateList());
@@ -113,13 +119,14 @@ public class ReadersView extends VerticalLayout implements BeforeEnterObserver {
         Button addReaderButton = new Button("Dodaj czytelnika");
         addReaderButton.addClickListener(e -> addReader());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterName, filterSurname, clearFiltersButton, addReaderButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterId, filterName, filterSurname, clearFiltersButton, addReaderButton);
         toolbar.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
         return toolbar;
     }
 
     private void clearFilters() {
+        filterId.clear();
         filterName.clear();
         filterSurname.clear();
     }
@@ -132,6 +139,7 @@ public class ReadersView extends VerticalLayout implements BeforeEnterObserver {
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
+        grid.addColumn(Reader::getId).setHeader("ID").setSortable(true);
         grid.addColumn(Reader::getName).setHeader("Imię").setSortable(true);
         grid.addColumn(Reader::getSurname).setHeader("Nazwisko").setSortable(true);
         grid.addColumn(Reader::getEmail).setHeader("E-mail").setSortable(false);
