@@ -333,8 +333,8 @@ public class DataGenerator {
             borrow5.setBook(book3);
             borrow5.setBorrowDate(LocalDate.of(2021, 11, 8));
             borrow5.setBorrowEmployee(librarian2);
-            borrow3.setGiveBackDate(LocalDate.of(2021, 11, 17));
-            borrow3.setGiveBackEmployee(boss);
+            borrow5.setGiveBackDate(LocalDate.of(2021, 11, 17));
+            borrow5.setGiveBackEmployee(boss);
             borrow5.setReader(ostrowski);
 
             Borrow borrow6 = new Borrow();
