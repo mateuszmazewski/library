@@ -24,7 +24,8 @@ public class DataGenerator {
                                       ReaderRepository readerRepository,
                                       EmployeeRepository employeeRepository,
                                       UserRepository userRepository,
-                                      BookRepository bookRepository) {
+                                      BookRepository bookRepository,
+                                      BorrowRepository borrowRepository) {
 
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
@@ -237,39 +238,39 @@ public class DataGenerator {
 
             // ----- BOOKS -----
 
-            Book b1 = new Book();
-            b1.setBookCode("E-00284");
-            b1.setBookDefinition(witcher1);
-            b1.setNotes("Porwana okładka na rogach");
+            Book book1 = new Book();
+            book1.setBookCode("E-00284");
+            book1.setBookDefinition(witcher1);
+            book1.setNotes("Porwana okładka na rogach");
 
-            Book b2 = new Book();
-            b2.setBookCode("E-00072");
-            b2.setBookDefinition(witcher1);
-            b2.setNotes("Jak nowa");
+            Book book2 = new Book();
+            book2.setBookCode("E-00072");
+            book2.setBookDefinition(witcher1);
+            book2.setNotes("Jak nowa");
 
-            Book b3 = new Book();
-            b3.setBookCode("E-00121");
-            b3.setBookDefinition(teutonicKnights);
-            b3.setNotes("Porwana okładka na rogach");
+            Book book3 = new Book();
+            book3.setBookCode("E-00121");
+            book3.setBookDefinition(teutonicKnights);
+            book3.setNotes("Porwana okładka na rogach");
 
-            Book b4 = new Book();
-            b4.setBookCode("E-00090");
-            b4.setBookDefinition(teutonicKnights);
+            Book book4 = new Book();
+            book4.setBookCode("E-00090");
+            book4.setBookDefinition(teutonicKnights);
 
-            Book b5 = new Book();
-            b5.setBookCode("D-00001");
-            b5.setBookDefinition(romeoAndJuliet);
+            Book book5 = new Book();
+            book5.setBookCode("D-00001");
+            book5.setBookDefinition(romeoAndJuliet);
 
-            Book b6 = new Book();
-            b6.setBookCode("E-00736");
-            b6.setBookDefinition(mrThaddeus);
+            Book book6 = new Book();
+            book6.setBookCode("E-00736");
+            book6.setBookDefinition(mrThaddeus);
 
-            bookRepository.save(b1);
-            bookRepository.save(b2);
-            bookRepository.save(b3);
-            bookRepository.save(b4);
-            bookRepository.save(b5);
-            bookRepository.save(b6);
+            bookRepository.save(book1);
+            bookRepository.save(book2);
+            bookRepository.save(book3);
+            bookRepository.save(book4);
+            bookRepository.save(book5);
+            bookRepository.save(book6);
 
             // ----- READERS -----
 
@@ -297,6 +298,74 @@ public class DataGenerator {
             readerRepository.save(kowalski);
             readerRepository.save(nowak);
             readerRepository.save(ostrowski);
+
+            // ----- BORROWS -----
+
+            Borrow borrow1 = new Borrow();
+            borrow1.setBook(book1);
+            borrow1.setBorrowDate(LocalDate.of(2021, 10, 27));
+            borrow1.setBorrowEmployee(librarian1);
+            borrow1.setGiveBackDate(LocalDate.of(2021, 11, 20));
+            borrow1.setGiveBackEmployee(librarian1);
+            borrow1.setReader(ostrowski);
+
+            Borrow borrow2 = new Borrow();
+            borrow2.setBook(book2);
+            borrow2.setBorrowDate(LocalDate.of(2021, 12, 2));
+            borrow2.setBorrowEmployee(librarian2);
+            borrow2.setReader(kowalski);
+
+            Borrow borrow3 = new Borrow();
+            borrow3.setBook(book3);
+            borrow3.setBorrowDate(LocalDate.of(2021, 11, 8));
+            borrow3.setBorrowEmployee(boss);
+            borrow3.setGiveBackDate(LocalDate.of(2021, 11, 19));
+            borrow3.setGiveBackEmployee(librarian1);
+            borrow3.setReader(nowak);
+
+            Borrow borrow4 = new Borrow();
+            borrow4.setBook(book4);
+            borrow4.setBorrowDate(LocalDate.of(2021, 11, 8));
+            borrow4.setBorrowEmployee(librarian1);
+            borrow4.setReader(nowak);
+
+            Borrow borrow5 = new Borrow();
+            borrow5.setBook(book3);
+            borrow5.setBorrowDate(LocalDate.of(2021, 11, 8));
+            borrow5.setBorrowEmployee(librarian2);
+            borrow3.setGiveBackDate(LocalDate.of(2021, 11, 17));
+            borrow3.setGiveBackEmployee(boss);
+            borrow5.setReader(ostrowski);
+
+            Borrow borrow6 = new Borrow();
+            borrow6.setBook(book1);
+            borrow6.setBorrowDate(LocalDate.of(2021, 11, 13));
+            borrow6.setBorrowEmployee(boss);
+            borrow6.setReader(kowalski);
+
+            Borrow borrow7 = new Borrow();
+            borrow7.setBook(book5);
+            borrow7.setBorrowDate(LocalDate.of(2021, 12, 1));
+            borrow7.setBorrowEmployee(boss);
+            borrow7.setGiveBackDate(LocalDate.of(2021, 12, 3));
+            borrow7.setGiveBackEmployee(librarian2);
+            borrow7.setReader(kowalski);
+
+            borrowRepository.save(borrow1);
+            borrowRepository.save(borrow2);
+            borrowRepository.save(borrow3);
+            borrowRepository.save(borrow4);
+            borrowRepository.save(borrow5);
+            borrowRepository.save(borrow6);
+            borrowRepository.save(borrow7);
+
+            book2.setBorrow(borrow2);
+            book4.setBorrow(borrow4);
+            book1.setBorrow(borrow6);
+
+            bookRepository.save(book2);
+            bookRepository.save(book4);
+            bookRepository.save(book1);
         };
     }
 
