@@ -50,6 +50,12 @@ public class BorrowForm extends EntityForm {
                         Messages.NOT_EMPTY_GIVE_BACK_EMPLOYEE)
                 .bind(Borrow::getGiveBackEmployee, Borrow::setGiveBackEmployee);
 
+        binder.forField(giveBackDate)
+                .withValidator(
+                        giveBackDate -> giveBackDate == null || !(giveBackDate.isBefore(borrowDate.getValue())),
+                        Messages.GIVE_BACK_AFTER_BORROW_DATE)
+                .bind(Borrow::getGiveBackDate, Borrow::setGiveBackDate);
+
         checkGiveBackEmployee();
 
         add(reader, book, borrowDate, borrowEmployee, giveBackDate, giveBackEmployee, notes, createButtonLayout());
