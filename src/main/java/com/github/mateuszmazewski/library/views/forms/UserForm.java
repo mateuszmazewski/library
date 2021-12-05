@@ -52,8 +52,6 @@ public class UserForm extends EntityForm {
                         Messages.UNIQUE)
                 .bind(User::getUsername, User::setUsername);
 
-        //TODO - add validator for password
-
         add(username, rawPassword, employee, active, rolesLabel, rolesList, createButtonLayout());
         saveButton.addClickListener(e -> validateAndSave());
         deleteButton.addClickListener(e -> fireEvent(new DeleteEvent(this, user)));
