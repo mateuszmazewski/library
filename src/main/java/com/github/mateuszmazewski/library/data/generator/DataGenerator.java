@@ -72,7 +72,7 @@ public class DataGenerator {
 
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setPassword(passwordEncoder.encode("adminpass"));
             admin.setRoles("ROLE_ADMIN,ROLE_USER");
             admin.setActive(true);
             admin.setEmployee(boss);
