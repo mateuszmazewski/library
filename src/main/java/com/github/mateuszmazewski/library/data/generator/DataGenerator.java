@@ -60,9 +60,11 @@ public class DataGenerator {
             librarian2.setEmployedSinceDate(LocalDate.of(2019, 3, 22));
             librarian2.setEmployedSinceDate(LocalDate.of(2021, 11, 24));
 
-            employeeRepository.save(boss);
-            employeeRepository.save(librarian1);
-            employeeRepository.save(librarian2);
+            if (employeeRepository.count() == 0L) {
+                employeeRepository.save(boss);
+                employeeRepository.save(librarian1);
+                employeeRepository.save(librarian2);
+            }
 
             // ----- USERS -----
 
@@ -89,9 +91,11 @@ public class DataGenerator {
             userLibrarian2.setActive(false);
             userLibrarian2.setEmployee(librarian2);
 
-            userRepository.save(admin);
-            userRepository.save(userLibrarian1);
-            userRepository.save(userLibrarian2);
+            if (userRepository.count() == 0L) {
+                userRepository.save(admin);
+                userRepository.save(userLibrarian1);
+                userRepository.save(userLibrarian2);
+            }
 
             // ----- GENRES -----
 
@@ -99,11 +103,19 @@ public class DataGenerator {
             Genre poetry = new Genre("Liryka");
             Genre drama = new Genre("Dramat");
 
-            genreRepository.save(epic);
-            genreRepository.save(poetry);
-            genreRepository.save(drama);
+            if (genreRepository.count() == 0L) {
+                genreRepository.save(epic);
+                genreRepository.save(poetry);
+                genreRepository.save(drama);
+            }
 
-            if (authorRepository.count() != 0L || categoryRepository.count() != 0L) {
+            if (authorRepository.count() != 0L
+                    || categoryRepository.count() != 0L
+                    || bookDefinitionRepository.count() != 0L
+                    || bookRepository.count() != 0L
+                    || readerRepository.count() != 0L
+                    || borrowRepository.count() != 0L
+                    || publisherRepository.count() != 0L) {
                 logger.info("Using existing database");
                 return;
             }
