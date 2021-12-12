@@ -3,14 +3,11 @@ package com.github.mateuszmazewski.library.views;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterListener;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 
 @PageTitle("Logowanie | Biblioteka")
 @Route(value = "login")
-public class LoginView extends VerticalLayout implements BeforeEnterListener {
+public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     private final LoginForm loginForm;
 
     public LoginView() {
@@ -22,6 +19,9 @@ public class LoginView extends VerticalLayout implements BeforeEnterListener {
         i18n.getForm().setUsername("Nazwa użytkownika");
         i18n.getForm().setPassword("Hasło");
         i18n.getForm().setSubmit("Zaloguj się");
+        i18n.getErrorMessage().setTitle("\u200e");
+        i18n.getErrorMessage()
+                .setMessage("Niepoprawny login lub hasło");
         loginForm.setI18n(i18n);
 
         addClassName("login-view");
