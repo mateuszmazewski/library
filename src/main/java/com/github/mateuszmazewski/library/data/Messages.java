@@ -9,8 +9,8 @@ public class Messages {
     public static final String BOOK_ALREADY_BORROWED = "Ta książka jest aktualnie wypożyczona";
     public static final String PUBLICATION_YEAR_RANGE = "Musi być między 1000 a " + Calendar.getInstance().get(Calendar.YEAR);
     public static final String NOT_EMPTY_GIVE_BACK_EMPLOYEE = "Nie może być puste, jeśli ustawiono datę zwrotu";
-    public static final String CANNOT_DELETE_LOGGED_IN_USER = "Nie można usunąć aktualnie zalogowanego użytkownika";
-    public static final String CANNOT_DEACTIVATE_LOGGED_IN_USER = "Nie można zdezaktywować aktualnie zalogowanego użytkownika";
+    public static final String CANNOT_DELETE_LOGGED_IN_USER = "Zalogowany użytkownik nie może usunąć samego siebie";
+    public static final String CANNOT_DEACTIVATE_LOGGED_IN_USER = "Zalogowany użytkownik nie może dezaktywować samego siebie";
     public static final String GIVE_BACK_AFTER_BORROW_DATE = "Data zwrotu nie może być wcześniejsza od daty wypożyczenia";
 
     public static final String INTEGRITY_AUTHOR = "Nie można usunąć autora, który posiada przypisania do definicji książek.";
