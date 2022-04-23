@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,9 +21,13 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.vaadin.haijian.Exporter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @PageTitle("Wypożyczenia | Biblioteka")
@@ -200,6 +205,13 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
         Button addBorrowButton = new Button("Dodaj wypożyczenie");
         addBorrowButton.addClickListener(e -> addBorrow());
 
+        LocalDateTime now = LocalDateTime.now();
+        String nowString = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss"));
+        String filename = "wypozyczenia_" + nowString + ".xls";
+        Button downloadExcelButton = new Button("Eksportuj plik Excel");
+        Anchor downloadExcel = new Anchor(new StreamResource(filename, Exporter.exportAsExcel(grid)), "");
+        downloadExcel.add(downloadExcelButton);
+
         HorizontalLayout filters1 = new HorizontalLayout(
                 filterBorrowStatus,
                 filterId,
@@ -211,7 +223,8 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
                 filterBorrowEmployee,
                 filterGiveBackEmployee,
                 clearFiltersButton,
-                addBorrowButton
+                addBorrowButton,
+                downloadExcel
         );
         filters1.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         filters2AndButtons.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
@@ -240,15 +253,24 @@ public class BorrowsView extends VerticalLayout implements BeforeEnterObserver {
     private void configureGrid() {
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(Borrow::getId).setHeader("ID wypoż.").setSortable(true);
-        grid.addColumn(borrow -> borrow.getReader().toString()).setHeader("Czytelnik").setSortable(true);
-        grid.addColumn(borrow -> borrow.getBook().getBookCode()).setHeader("Kod książki").setSortable(true);
-        grid.addColumn(borrow -> borrow.getBook().getBookDefinition().getTitle()).setHeader("Tytuł").setSortable(true);
-        grid.addColumn(borrow -> borrow.getBorrowEmployee().toString()).setHeader("Pracownik wypożyczający").setSortable(true);
-        grid.addColumn(borrow -> borrow.getGiveBackEmployee() != null ? borrow.getGiveBackEmployee().toString() : "").setHeader("Pracownik przyjmujący").setSortable(true);
-        grid.addColumn(Borrow::getBorrowDate).setHeader("Data wypożyczenia").setSortable(true);
-        grid.addColumn(borrow -> borrow.getGiveBackDate() != null ? borrow.getGiveBackDate() : "").setHeader("Data zwrotu").setSortable(true);
-        grid.addColumn(Borrow::getNotes).setHeader("Uwagi").setSortable(false);
+        grid.addColumn(Borrow::getId)
+                .setHeader("ID wypoż.").setSortable(true).setKey("id");
+        grid.addColumn(borrow -> borrow.getReader().toString())
+                .setHeader("Czytelnik").setSortable(true).setKey("reader");
+        grid.addColumn(borrow -> borrow.getBook().getBookCode())
+                .setHeader("Kod książki").setSortable(true).setKey("book.bookCode");
+        grid.addColumn(borrow -> borrow.getBook().getBookDefinition().getTitle())
+                .setHeader("Tytuł").setSortable(true).setKey("book.bookDefinition.title");
+        grid.addColumn(borrow -> borrow.getBorrowEmployee().toString())
+                .setHeader("Pracownik wypożyczający").setSortable(true).setKey("borrowEmployee");
+        grid.addColumn(borrow -> borrow.getGiveBackEmployee() != null ? borrow.getGiveBackEmployee().toString() : "")
+                .setHeader("Pracownik przyjmujący").setSortable(true).setKey("giveBackEmployee");
+        grid.addColumn(Borrow::getBorrowDate)
+                .setHeader("Data wypożyczenia").setSortable(true).setKey("borrowDate");
+        grid.addColumn(borrow -> borrow.getGiveBackDate() != null ? borrow.getGiveBackDate() : "")
+                .setHeader("Data zwrotu").setSortable(true).setKey("giveBackDate");
+        grid.addColumn(Borrow::getNotes)
+                .setHeader("Uwagi").setSortable(false).setKey("notes");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 

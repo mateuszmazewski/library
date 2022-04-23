@@ -21,6 +21,14 @@
         <vaadin.version>21.0.3</vaadin.version>
     </properties>
 
+    <repositories>
+        <!-- In order to load dependencies from GitHub -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -53,6 +61,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <!-- Vaadin Grid to Excel exporter -->
+            <groupId>com.github.haiwan</groupId>
+            <artifactId>Exporter</artifactId>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
